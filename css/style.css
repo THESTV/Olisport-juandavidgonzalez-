@@ -607,4 +607,34 @@ img {
   color: var(--secondary-color);
   margin-top: 1300px;
   }
+
+  .banner-header-text h1 {
+  font-size: 80px;
+  color: var(--secondary-color);
+  margin-top: 10px;
+  }
+
+    .banner-header-p1-about h1 {
+    font-size: 3.2rem;
+    margin-top: 170px;
+  }
+
+.map-container {
+  
+  padding-bottom: 30px;
+  overflow: hidden;
+  margin: center;
+  display: flex;
+  justify-content: center;
+}
+
+.text-map-container {
+  font-size: 30px;
+  font-weight: bold;
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+
 }
