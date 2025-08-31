@@ -326,6 +326,12 @@ a {
   margin-bottom: 20px;
 }
 
+.container-servicio h2, data-tile {
+ text-align: center;
+ padding-bottom: 20px;
+ margin-bottom: 20px;
+}
+
 .card-projects {
   width: 1000px;
   display: grid;
