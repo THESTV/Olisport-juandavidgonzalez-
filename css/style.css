@@ -161,7 +161,7 @@ a {
 
 /* Banner Home */
 .banner-header {
-  height: 60vh;
+  height: 40vh;
   width: 100%;
   overflow: hidden;
   background: #4e2a9b;
@@ -197,13 +197,13 @@ a {
 .banner-header-text-about h1 {
   font-size: 80px;
   color: var(--secondary-color);
-  margin-bottom: 20px;
+  margin-top: 160px;
 }
 
 .banner-header-text h1 {
   font-size: 80px;
   color: var(--secondary-color);
-  margin-bottom: 30px;
+  margin-top: 150px;
 }
 
 .banner-header-p1 p {
@@ -213,6 +213,12 @@ a {
 .banner-header-p1-contact p {
   font-size: 18px;
   margin-top: 15px;
+}
+
+.text-description p {
+  font-size: 20px;
+  text-align: center;
+  
 }
 
 .banner-header-contact{
@@ -262,6 +268,11 @@ a {
   place-content: center;
 }
 
+.banner-header-text-contact h1{
+
+  font-size: 40px;
+}
+
 .banner.title {
   font-size: 3rem;
   padding-bottom: 0px;
@@ -272,9 +283,9 @@ a {
   margin-bottom: 40px;
 }
 
-.banner-title-contact {
+.banner-title-contact h1 {
    font-size: 6rem;
-  margin-bottom: 4px;
+  margin-bottom: 10px;
 }
 
 
@@ -290,6 +301,16 @@ a {
   border-radius: 15px;
   margin-top: 5px;
   margin-bottom:5px;
+  cursor: pointer;
+}
+
+.btn-about {
+  padding: 5px;
+  background-color: var(--primary-color);
+  border: none;
+  border-radius: 15px;
+  margin-top: 5px;
+  margin-bottom:8px;
   cursor: pointer;
 }
 
@@ -488,6 +509,11 @@ img {
     font-size: 2.2rem;
   }
 
+  .banner-header-p1-about h1 {
+    font-size: 3.2rem;
+    margin-top: 170px;
+  }
+
   .banner-header-p1 p {
     font-size: 1rem;
     line-height: 1.4;
@@ -532,6 +558,35 @@ img {
   .main-footer li {
     margin-right: 0;
   }
+
+  .banner-header-text h1 {
+  font-size: 80px;
+  color: var(--secondary-color);
+  margin-top: 10px;
+  }
+
+    .banner-header-p1-about h1 {
+    font-size: 3.2rem;
+    margin-top: 170px;
+  }
+
+.map-container {
+  
+  padding-bottom: 30px;
+  overflow: hidden;
+  margin: center;
+  display: flex;
+  justify-content: center;
+}
+
+.text-map-container {
+  font-size: 30px;
+  font-weight: bold;
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 60px;
+}
+
 }
 
 /* 📱 Tablets (769px a 1024px) */
@@ -545,5 +600,11 @@ img {
 
   .banner-title {
     font-size: 3.5rem;
+  }
+
+.banner-header-text h1 {
+  font-size: 80px;
+  color: var(--secondary-color);
+  margin-top: 1300px;
   }
 }
