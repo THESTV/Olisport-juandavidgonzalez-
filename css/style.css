@@ -593,6 +593,36 @@ img {
   margin-bottom: 60px;
 }
 
+.container-servicio h2, data-tile {
+ text-align: center;
+ padding-bottom: 20px;
+ margin-bottom: 20px;
+ font-size: 20px;
+}
+
+.title-servicio {
+  font-size: 28px;   /* antes estaba en 36px o 40px, ahora más pequeño */
+  font-weight: bold;
+  text-align: center;
+  color: var(--secondary-color);
+  margin-bottom: 25px;
+}
+
+.banner-header-text h1 {
+  font-size: 50px;
+  
+}
+
+/* Subtítulo decorativo (el data-title) */
+.title-servicio::after {
+  content: attr(data-title);
+  display: block;
+  font-size: 20px;  /* también lo reducimos un poco */
+  font-weight: 400;
+  color: var(--primary-color);
+  margin-top: 6px;
+}
+
 }
 
 /* 📱 Tablets (769px a 1024px) */
