@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Iniciar Sesión - OliSport{% endblock %}
+
+{% block content %}
+
+<h2 class="form-title">Iniciar Sesión</h2>
+
+<form method="POST" class="form-container">
+
+    <label>Correo</label>
+    <input type="email" name="correo" required>
+
+    <label>Contraseña</label>
+    <input type="password" name="password" required>
+
+    <button type="submit" class="btn">Entrar</button>
+
+</form>
+
+<p style="margin-top: 15px;">
+    ¿No tienes cuenta?
+    <a href="{{ url_for('register') }}">Regístrate aquí</a>
+</p>
+
+{% endblock %}

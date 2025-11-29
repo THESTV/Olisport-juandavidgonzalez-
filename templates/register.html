@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Registrarse - OliSport{% endblock %}
+
+{% block content %}
+
+<h2 class="form-title">Crear Cuenta</h2>
+
+<form method="POST" class="form-container">
+
+    <label>Nombre completo</label>
+    <input type="text" name="nombre" required>
+
+    <label>Correo electrónico</label>
+    <input type="email" name="correo" required>
+
+    <label>Contraseña</label>
+    <input type="password" name="password" required>
+
+    <button type="submit" class="btn">Registrarme</button>
+
+</form>
+
+<p style="margin-top: 15px;">
+    ¿Ya tienes cuenta?
+    <a href="{{ url_for('login') }}">Inicia sesión</a>
+</p>
+
+{% endblock %}

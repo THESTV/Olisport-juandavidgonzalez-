@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Mi Perfil{% endblock %}
+
+{% block content %}
+
+<h1>Bienvenido, {{ usuario.nombre }}</h1>
+
+<p><strong>Correo:</strong> {{ usuario.correo }}</p>
+<p><strong>Rol:</strong> {{ usuario.rol }}</p>
+
+<br>
+
+<a href="{{ url_for('logout') }}">Cerrar sesión</a>
+
+{% endblock %}

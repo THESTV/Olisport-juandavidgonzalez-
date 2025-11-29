@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Inicio - OliSport{% endblock %}
+
+{% block content %}
+
+<section class="banner-header-p1-index">
+  <div class="banner-header">
+    <div class="banner-header-text">
+      <h1 class="banner-title">Oli<span>Sport</span></h1>
+      <hr />
+      <p>
+        Descubre la última moda en zapatillas para dama, hombre y niños. 
+        En OliShoes encontrarás la mejor calidad y atención personalizada. 
+        ¡Visítanos y encuentra tu estilo perfecto!
+      </p>
+
+      <a href="{{ url_for('contact') }}" class="btn">
+        <i class="fa fa-mobile" style="margin-right: 5px; color: black;"></i> CONTACTANOS
+      </a>
+    </div>
+  </div>
+</section>
+
+<main>
+
+  <!-- CATALOGO -->
+  <section class="section Catalogo">
+    <div class="container-catalogo">
+      <h3 class="title" data-title="__________________">CATALOGO</h3>
+    </div>
+  </section>
+
+  <section>
+    <div class="card-projects">
+
+      <article class="card">
+        <a href="https://drive.google.com/drive/folders/1KRzGgS35T0kqeLYk1wT65xI5DcP2ZlF2?usp=sharing">
+          <img src="{{ url_for('static', filename='img/portfolio/istockphoto-1272854630-612x612.jpg') }}" alt="caballero" />
+          <h3 style="color: white;">Caballero</h3>
+        </a>
+      </article>
+
+      <article class="card">
+        <a href="https://drive.google.com/drive/folders/14o_058AfwWfbHlgB8TVJVU4FB2rRyqWJ?usp=drive_link">
+          <img src="{{ url_for('static', filename='img/portfolio/woman-shoe-icon.jpg') }}" alt="dama" />
+          <h3 style="color: white;">Dama</h3>
+        </a>
+      </article>
+
+      <article class="card">
+        <a href="https://drive.google.com/drive/folders/1hFqvC0nxc_lu4IFNgjlPKSDA1hxnPrC6?usp=sharing">
+          <img src="{{ url_for('static', filename='img/portfolio/kids-shoes.jpg') }}" alt="niño" />
+          <h3 style="color: white;">Niño</h3>
+        </a>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- QUIÉNES SOMOS -->
+  <section class="section hireme">
+    <div class="container">
+      <div class="section-header">
+        <h1 class="title" style="font-size: 30px;">CONOCE MÁS SOBRE NOSOTROS</h1>
+      </div>
+
+      <a href="{{ url_for('about') }}" class="btn">
+        <span style="color: black;">Quiénes somos</span>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+{% endblock %}

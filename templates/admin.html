@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Panel Administrador{% endblock %}
+
+{% block content %}
+
+<h1>Panel de Administración</h1>
+
+<p>Bienvenido, {{ usuario.nombre }} (ADMIN)</p>
+
+<h3>Opciones:</h3>
+<ul>
+    <li>Gestionar usuarios</li>
+    <li>Gestionar whitelist</li>
+    <li>Ver reportes</li>
+</ul>
+
+<a href="{{ url_for('logout') }}">Cerrar sesión</a>
+
+{% endblock %}
