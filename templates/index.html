@@ -1,76 +1,128 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Olisport" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.6.1/css/all.css"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style-responsive.css') }}" />
+    <title>OliSport | 👟⚡</title>
+  </head>
 
-{% block title %}Inicio - OliSport{% endblock %}
+  <body>
+    <header>
+      <nav class="navbar">
+        <div class="nav-container">
+          <div class="logo">
+            <a href="{{ url_for('index') }}">
+              <img src="{{ url_for('static', filename='img/portfolio/logo-olisport.PNG') }}" alt="logo">
+            </a>
+          </div>
 
-{% block content %}
+          <ul>
+            <li><a href="{{ url_for('index') }}" class="current">Inicio</a></li>
+            <li><a href="{{ url_for('about') }}">Quiénes somos</a></li>
+            <li><a href="{{ url_for('servicio') }}">Servicios</a></li>
+            <li><a href="{{ url_for('contact') }}">Contáctanos</a></li>
 
-<section class="banner-header-p1-index">
-  <div class="banner-header">
-    <div class="banner-header-text">
-      <h1 class="banner-title">Oli<span>Sport</span></h1>
-      <hr />
-      <p>
-        Descubre la última moda en zapatillas para dama, hombre y niños. 
-        En OliShoes encontrarás la mejor calidad y atención personalizada. 
-        ¡Visítanos y encuentra tu estilo perfecto!
-      </p>
+            {% if current_user.is_authenticated %}
+              <li><a href="{{ url_for('panel') }}">Mi Panel</a></li>
+              <li><a href="{{ url_for('logout') }}">Cerrar sesión</a></li>
+            {% else %}
+              <li><a href="{{ url_for('login') }}">Iniciar sesión</a></li>
+              <li><a href="{{ url_for('register') }}">Registrarse</a></li>
+            {% endif %}
+          </ul>
+        </div>
+        <hr/>
+      </nav>
 
-      <a href="{{ url_for('contact') }}" class="btn">
-        <i class="fa fa-mobile" style="margin-right: 5px; color: black;"></i> CONTACTANOS
-      </a>
-    </div>
-  </div>
-</section>
+      <section class="banner-header-p1-index">
+        <div class="banner-header">
+          <div class="banner-header-text">
+            <h1 class="banner-title">Oli<span>Sport</span></h1>
+            <hr />
 
-<main>
+            <p>
+              Descubre la última moda en zapatillas para dama, hombre y niños.  
+              En OliShoes encontrarás la mejor calidad y atención personalizada.  
+              ¡Visítanos y encuentra tu estilo perfecto!
+            </p>
 
-  <!-- CATALOGO -->
-  <section class="section Catalogo">
-    <div class="container-catalogo">
-      <h3 class="title" data-title="__________________">CATALOGO</h3>
-    </div>
-  </section>
+            <a href="{{ url_for('contact') }}" class="btn">
+              <i class="fa fa-mobile" style="margin-right: 5px; color: black;"></i> CONTACTANOS
+            </a>
+          </div>
+        </div>
+      </section>
+    </header>
 
-  <section>
-    <div class="card-projects">
+    <main>
+      <section class="section Catalogo" id="catalogo">
+        <div class="container-catalogo">
+          <h3 class="title" data-title="__________________">CATÁLOGO</h3>
+        </div>
+      </section>
 
-      <article class="card">
-        <a href="https://drive.google.com/drive/folders/1KRzGgS35T0kqeLYk1wT65xI5DcP2ZlF2?usp=sharing">
-          <img src="{{ url_for('static', filename='img/portfolio/istockphoto-1272854630-612x612.jpg') }}" alt="caballero" />
-          <h3 style="color: white;">Caballero</h3>
-        </a>
-      </article>
+      <section>
+        <div class="card-projects">
 
-      <article class="card">
-        <a href="https://drive.google.com/drive/folders/14o_058AfwWfbHlgB8TVJVU4FB2rRyqWJ?usp=drive_link">
-          <img src="{{ url_for('static', filename='img/portfolio/woman-shoe-icon.jpg') }}" alt="dama" />
-          <h3 style="color: white;">Dama</h3>
-        </a>
-      </article>
+          <article class="card">
+            <a href="https://drive.google.com/drive/folders/1KRzGgS35T0kqeLYk1wT65xI5DcP2ZlF2?usp=sharing">
+              <img src="{{ url_for('static', filename='img/portfolio/istockphoto-1272854630-612x612.jpg') }}" />
+              <h3 style="color: white;">Caballero</h3>
+            </a>
+          </article>
 
-      <article class="card">
-        <a href="https://drive.google.com/drive/folders/1hFqvC0nxc_lu4IFNgjlPKSDA1hxnPrC6?usp=sharing">
-          <img src="{{ url_for('static', filename='img/portfolio/kids-shoes.jpg') }}" alt="niño" />
-          <h3 style="color: white;">Niño</h3>
-        </a>
-      </article>
+          <article class="card">
+            <a href="https://drive.google.com/drive/folders/14o_058AfwWfbHlgB8TVJVU4FB2rRyqWJ?usp=drive_link">
+              <img src="{{ url_for('static', filename='img/portfolio/woman-shoe-icon.jpg') }}" />
+              <h3 style="color: white;">Dama</h3>
+            </a>
+          </article>
 
-    </div>
-  </section>
+          <article class="card">
+            <a href="https://drive.google.com/drive/folders/1hFqvC0nxc_lu4IFNgjlPKSDA1hxnPrC6?usp=sharing">
+              <img src="{{ url_for('static', filename='img/portfolio/kids-shoes.jpg') }}" />
+              <h3 style="color: white;">Niño</h3>
+            </a>
+          </article>
 
-  <!-- QUIÉNES SOMOS -->
-  <section class="section hireme">
-    <div class="container">
-      <div class="section-header">
-        <h1 class="title" style="font-size: 30px;">CONOCE MÁS SOBRE NOSOTROS</h1>
+        </div>
+      </section>
+
+      <section class="section hireme">
+        <div class="container">
+          <div class="section-header">
+            <h1 class="title" style="font-size: 30px;">CONOCE MÁS SOBRE NOSOTROS</h1>
+          </div>
+
+          <a href="{{ url_for('about') }}" class="btn">
+            <span style="color: black;">Quiénes somos</span>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="main-footer">
+      <p>&copy; 2025 OliSport — Todos los derechos reservados.</p>
+      <div class="container">
+        <p class="small">Catálogo 2025</p>
+        <ul>
+          <li><a href="#"><i class="fab fa-facebook"></i></a></li>
+          <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+          <li><a href="#"><i class="fab fa-youtube"></i></a></li>
+        </ul>
       </div>
-
-      <a href="{{ url_for('about') }}" class="btn">
-        <span style="color: black;">Quiénes somos</span>
-      </a>
-    </div>
-  </section>
-
-</main>
-
-{% endblock %}
+    </footer>
+  </body>
+</html>

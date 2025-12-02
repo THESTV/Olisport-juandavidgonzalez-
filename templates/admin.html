@@ -4,17 +4,23 @@
 
 {% block content %}
 
-<h1>Panel de Administración</h1>
+<div class="admin-box">
 
-<p>Bienvenido, {{ usuario.nombre }} (ADMIN)</p>
+    <h1 class="admin-title">Panel Administrativo</h1>
 
-<h3>Opciones:</h3>
-<ul>
-    <li>Gestionar usuarios</li>
-    <li>Gestionar whitelist</li>
-    <li>Ver reportes</li>
-</ul>
+    <p class="admin-welcome">
+        Bienvenido, <strong>{{ usuario.nombre }}</strong> (ADMIN)
+    </p>
 
-<a href="{{ url_for('logout') }}">Cerrar sesión</a>
+    <h3 class="admin-subtitle">Opciones disponibles</h3>
+
+    <ul class="admin-list">
+        <li>Gestionar usuarios</li>
+        <li>Gestionar whitelist</li>
+        <li>Ver reportes</li>
+    </ul>
+
+    <a class="btn outline-btn" href="{{ url_for('logout') }}">Cerrar sesión</a>
+</div>
 
 {% endblock %}

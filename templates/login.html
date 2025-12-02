@@ -1,26 +1,36 @@
 {% extends "base.html" %}
 
-{% block title %}Iniciar Sesión - OliSport{% endblock %}
+{% block title %}Registrarse - OliSport{% endblock %}
 
 {% block content %}
 
-<h2 class="form-title">Iniciar Sesión</h2>
+<section class="auth-section">
+    <h2 class="form-title">Crear Cuenta</h2>
 
-<form method="POST" class="form-container">
+    <form method="POST" class="form-container">
 
-    <label>Correo</label>
-    <input type="email" name="correo" required>
+        <div class="form-group">
+            <label>Nombre completo</label>
+            <input type="text" name="nombre" placeholder="Tu nombre" required>
+        </div>
 
-    <label>Contraseña</label>
-    <input type="password" name="password" required>
+        <div class="form-group">
+            <label>Correo electrónico</label>
+            <input type="email" name="correo" placeholder="correo@ejemplo.com" required>
+        </div>
 
-    <button type="submit" class="btn">Entrar</button>
+        <div class="form-group">
+            <label>Contraseña</label>
+            <input type="password" name="password" placeholder="••••••••" required>
+        </div>
 
-</form>
+        <button type="submit" class="btn full-btn">Registrarme</button>
+    </form>
 
-<p style="margin-top: 15px;">
-    ¿No tienes cuenta?
-    <a href="{{ url_for('register') }}">Regístrate aquí</a>
-</p>
+    <p class="form-footer">
+        ¿Ya tienes cuenta?
+        <a href="{{ url_for('login') }}">Inicia sesión</a>
+    </p>
+</section>
 
 {% endblock %}

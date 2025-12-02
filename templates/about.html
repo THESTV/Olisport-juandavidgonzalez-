@@ -4,102 +4,99 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Olisport" />
+
+    <!-- Google Fonts -->
     <link
       href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap"
       rel="stylesheet"
     />
+
+    <!-- FontAwesome -->
     <link
       rel="stylesheet"
       href="https://use.fontawesome.com/releases/v5.6.1/css/all.css"
-      integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP"
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="css/style.css" />
-    <link rel="stylesheet" href="css/style-responsive.css" />
-    <title>Olisport | 👟⚡ </title>
+
+    <!-- CSS desde Flask -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style-responsive.css') }}">
+
+    <title>Olisport | 👟⚡</title>
   </head>
+
   <body>
     <header>
       <nav class="navbar">
         <div class="nav-container">
           <div class="logo">
-            <a href="index.html"><img src="img/portfolio/logo-olisport.PNG" alt="logo"></a>
+            <a href="{{ url_for('index') }}">
+              <img src="{{ url_for('static', filename='img/portfolio/logo-olisport.PNG') }}" alt="logo">
+            </a>
           </div>
+
           <ul>
-            <li><a href="index.html">Inicio</a></li>
-
-            <li><a href="about.html"class="current">Quiénes somos</a></li>
-
-            <li><a href="servicio.html">Servicios</a></li>
-          
-            <li><a href="contact.html">Contactanos</a></li>
+            <li><a href="{{ url_for('index') }}">Inicio</a></li>
+            <li><a href="{{ url_for('about') }}" class="current">Quiénes somos</a></li>
+            <li><a href="{{ url_for('servicio') }}">Servicios</a></li>
+            <li><a href="{{ url_for('contact') }}">Contáctanos</a></li>
           </ul>
-        </div>  
+        </div>
+
         <hr/>
-        <hr/>   
-      </nav>   
-      
-   <section class="banner-header-p1-about">
-<div class="banner-header">
-  <div class="banner-header-text-about">
-     
-        <h1 class="banner-title">QUIENES <br><br><br> <span>SOMOS</span></h1>
-   
-        <hr />
+        <hr/>
+      </nav>
 
-  </div>
-</section>
+      <section class="banner-header-p1-about">
+        <div class="banner-header">
+          <div class="banner-header-text-about">
+            <h1 class="banner-title">
+              QUIÉNES <br><br><br> <span>SOMOS</span>
+            </h1>
+            <hr />
+          </div>
+        </div>
+      </section>
     </header>
+
     <main>
-  
-  
-</section>
-<section>
-<div class="text-description" style="text-align: center;margin-top: 30px ; margin-bottom: 60px; font-size: 20px ; text-align: center;">
-     <p>
-     Somos una microempresa especializada en la venta de zapatillas de las mejores marcas internacionales, ofreciendo una <br>amplia variedad 
-     de modelos y estilos de alta calidad. Nuestra misión es brindarte la mejor experiencia de compra, <br> con productos auténticos  y un servicio
-     personalizado. Nuestro equipo está aquí para ayudarte a encontrar la mejor opción para tu emprendimiento o uso cotidiano,
-      asesorándote en la elección del calzado perfecto rque se adapte a tus necesidades y estilo.
-    </p>
-    <a href="contact.html" class="btn-about">
-<i class="fa fa-mobile" style="margin-top: 40px; padding-top: 20px; color: #000000;"></i> <span style="color: #000000;">CONTÁCTANOS</span>
-</a>
-</div>
-  
+      <section>
+        <div class="text-description"
+             style="text-align: center; margin-top: 30px; margin-bottom: 60px; font-size: 20px;">
 
-</section>
-    <hr />
-    <hr/>
-    <footer class="main-footer">
-      <p>&copy; 2025 Oli Sport.     Todos los derechos reservados.</p>
-      <div class="container">
+          <p>
+            Somos una microempresa especializada en la venta de zapatillas de las mejores marcas internacionales,
+            ofreciendo una amplia variedad de modelos y estilos de alta calidad.
+            <br><br>
+            Nuestra misión es brindarte la mejor experiencia de compra, con productos auténticos y un servicio personalizado.
+            Nuestro equipo está aquí para ayudarte a encontrar la mejor opción para tu emprendimiento o uso cotidiano,
+            asesorándote en la elección del calzado perfecto que se adapte a tus necesidades y estilo.
+          </p>
 
-        <p class="small">Catalalogo 2025 &copy;</p>
+          <a href="{{ url_for('contact') }}" class="btn-about">
+            <i class="fa fa-mobile" style="margin-top: 40px; padding-top: 20px; color: #000000;"></i>
+            <span style="color: #000000;">CONTÁCTANOS</span>
+          </a>
 
-        <ul>
+        </div>
+      </section>
 
-          <li>
+      <hr/>
+      <hr/>
 
-            <a href="#"><i class="fab fa-facebook"></i></a>
+      <footer class="main-footer">
+        <p>&copy; 2025 Oli Sport. Todos los derechos reservados.</p>
 
-          </li>
+        <div class="container">
+          <p class="small">Catálogo 2025 &copy;</p>
 
-          <li>
-
-            <a href="#"><i class="fab fa-instagram"></i></a>
-
-          </li>
-
-          <li>
-
-            <a href="#"><i class="fab fa-youtube"></i></a>
-
-          </li>
-
-        </ul>
-
-      </div>
-    </footer>
-    </body>
-    </html>
+          <ul>
+            <li><a href="#"><i class="fab fa-facebook"></i></a></li>
+            <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+            <li><a href="#"><i class="fab fa-youtube"></i></a></li>
+          </ul>
+        </div>
+      </footer>
+    </main>
+  </body>
+</html>

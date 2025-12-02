@@ -2,38 +2,46 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>{% block title %}OliSport{% endblock %}</title>
 
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- Iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    <!-- Tus estilos -->
+    <!-- Estilos generales del sitio -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
 <body>
 
     <!-- NAVBAR GLOBAL -->
-    <nav style="padding: 15px; border-bottom: 1px solid #ddd;">
-        <a href="{{ url_for('index') }}">Inicio</a> |
-        <a href="{{ url_for('about') }}">Quiénes somos</a> |
-        <a href="{{ url_for('servicio') }}">Servicios</a> |
-        <a href="{{ url_for('contact') }}">Contacto</a>
+    <nav class="navbar">
+        <div class="navbar-container">
 
-        {% if current_user.is_authenticated %}
-            | <a href="{{ url_for('perfil') }}">Mi perfil</a>
-            | <a href="{{ url_for('logout') }}">Cerrar sesión</a>
-        {% else %}
-            | <a href="{{ url_for('login') }}">Iniciar sesión</a>
-            | <a href="{{ url_for('register') }}">Registrarme</a>
-        {% endif %}
+            <div class="navbar-links">
+                <a href="{{ url_for('index') }}">Inicio</a>
+                <a href="{{ url_for('about') }}">Quiénes somos</a>
+                <a href="{{ url_for('servicio') }}">Servicios</a>
+                <a href="{{ url_for('contact') }}">Contacto</a>
+
+                {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('perfil') }}">Mi perfil</a>
+                    <a href="{{ url_for('logout') }}">Cerrar sesión</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}">Iniciar sesión</a>
+                    <a href="{{ url_for('register') }}">Registrarme</a>
+                {% endif %}
+            </div>
+
+        </div>
     </nav>
 
-    <!-- CONTENIDO DE LA PÁGINA -->
-    <div style="padding: 20px;">
+    <!-- CONTENIDO DINÁMICO -->
+    <main class="page-content">
         {% block content %}
         {% endblock %}
-    </div>
+    </main>
 
 </body>
 </html>

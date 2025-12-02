@@ -7,17 +7,17 @@ import os
 
 app = Flask(__name__)
 
-# Clave para sesiones
+# Clave secreta para sesiones
 app.config['SECRET_KEY'] = "clave_secreta_olisport"
 
-# Ruta DB dentro de /database
+# Ruta de la base de datos dentro de /database
 db_path = os.path.join(os.path.dirname(__file__), "database", "olisport.db")
 app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{db_path}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
 
-# Config flask-login
+# Configuración de flask-login
 login_manager = LoginManager()
 login_manager.login_view = 'login'
 login_manager.init_app(app)
@@ -28,7 +28,7 @@ def load_user(user_id):
 
 
 # -----------------------------
-#         RUTAS PÚBLICAS
+#        RUTAS PÚBLICAS
 # -----------------------------
 @app.route('/')
 def index():
@@ -48,7 +48,7 @@ def servicio():
 
 
 # -----------------------------
-#         REGISTRO
+#           REGISTRO
 # -----------------------------
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -57,7 +57,7 @@ def register():
         correo = request.form['correo']
         password = request.form['password']
 
-        # Verificar si el correo existe
+        # Verificar si el correo ya existe
         usuario = User.query.filter_by(correo=correo).first()
         if usuario:
             flash("El correo ya está registrado", "error")
@@ -66,8 +66,7 @@ def register():
         nuevo_usuario = User(
             nombre=nombre,
             correo=correo,
-            password_hash=generate_password_hash(password),
-            rol="cliente"
+            password_hash=generate_password_hash(password)
         )
 
         db.session.add(nuevo_usuario)
@@ -80,7 +79,7 @@ def register():
 
 
 # -----------------------------
-#         LOGIN
+#            LOGIN
 # -----------------------------
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -94,20 +93,24 @@ def login():
             flash("Correo o contraseña incorrectos", "error")
             return redirect(url_for("login"))
 
+        # Iniciar sesión
         login_user(usuario)
 
-        # 🔥 REDIRECCIÓN SEGÚN ROL 🔥
-        if usuario.rol == "admin":
+        # Verificar whitelist
+        acceso = Whitelist.query.filter_by(id_usuario=usuario.id).first()
+
+        # Si está en whitelist → admin
+        if acceso:
             return redirect(url_for("admin"))
 
-        # Cliente → Perfil
+        # Si NO está permitido → cliente normal
         return redirect(url_for("perfil"))
 
     return render_template("login.html")
 
 
 # -----------------------------
-#      PERFIL CLIENTE
+#        PERFIL CLIENTE
 # -----------------------------
 @app.route("/perfil")
 @login_required
@@ -116,7 +119,7 @@ def perfil():
 
 
 # -----------------------------
-#         ADMIN PANEL
+#        ADMIN PANEL
 # -----------------------------
 @app.route('/admin')
 @login_required
@@ -132,16 +135,7 @@ def admin():
 
 
 # -----------------------------
-#         PERFIL DEL USUARIO
-# -----------------------------
-@app.route('/perfil')
-@login_required
-def perfil():
-    return render_template("perfil.html", usuario=current_user)
-
-
-# -----------------------------
-#         LOGOUT
+#            LOGOUT
 # -----------------------------
 @app.route('/logout')
 def logout():
@@ -149,7 +143,7 @@ def logout():
     return redirect(url_for('index'))
 
 
-# Crear BD si no existe
+# Crear la base de datos si no existe
 with app.app_context():
     os.makedirs("database", exist_ok=True)
     db.create_all()
