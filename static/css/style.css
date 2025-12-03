@@ -1,18 +1,21 @@
-/* Variables */
+/* =======================================
+   VARIABLES
+======================================= */
 :root {
   --main-color: #030344;
   --primary-color: rgb(0, 229, 255);
   --secondary-color: #ffffff;
 }
 
-/* Reset */
+/* =======================================
+   RESET
+======================================= */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* Main styling */
 body,
 html {
   font-family: "Raleway", sans-serif;
@@ -25,11 +28,19 @@ hr {
   border: 0.5px solid var(--secondary-color);
 }
 
-/* Utility Classes */
 a {
   text-decoration: none;
 }
 
+img {
+  object-fit: cover;
+  max-width: 100%;
+  height: auto;
+}
+
+/* =======================================
+   UTILIDADES
+======================================= */
 .container {
   margin: 0 auto;
   max-width: 1100px;
@@ -48,6 +59,11 @@ a {
 .section-header {
   text-align: center;
   margin-bottom: 1.5rem;
+}
+
+.text {
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .title {
@@ -81,12 +97,9 @@ a {
   transform: translateX(-50%);
 }
 
-.text {
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-/* Navbar */
+/* =======================================
+   NAVBAR
+======================================= */
 .navbar {
   position: left;
   top: 0;
@@ -101,28 +114,28 @@ a {
   overflow: auto;
   padding: 10px;
   display: flex;
-  justify-content: space-between; 
-  align-items: center; 
+  justify-content: space-between;
+  align-items: center;
 }
 
 .logo {
   display: flex;
-  align-items: center; 
-}
-
-.navbar a {
-  color: var(--secondary-color);
+  align-items: center;
 }
 
 .logo img {
-  width: 100px; 
-  height: auto; 
+  width: 100px;
+  height: auto;
   border-radius: 100px;
 }
 
 .logo img:hover {
   transform: rotate(360deg);
   transition: 1.5s;
+}
+
+.navbar a {
+  color: var(--secondary-color);
 }
 
 .navbar ul {
@@ -140,7 +153,6 @@ a {
   padding: 10px;
   text-align: center;
   display: block;
-  color: var(--secondary-color);
   transition: all 3s ease;
   color: #ffffff;
   transform: scale(1.1);
@@ -159,12 +171,13 @@ a {
   color: var(--main-color);
 }
 
-/* Banner Home */
+/* =======================================
+   BANNERS
+======================================= */
 .banner-header {
-  height: 40vh;
+  height: 50vh;
   width: 100%;
   overflow: hidden;
-  background: #4e2a9b;
   background: linear-gradient(
       45deg,
       rgba(78, 42, 155, 0.6) 31%,
@@ -176,142 +189,134 @@ a {
   background-size: cover;
 }
 
-.banner-header-p1 h1 {
-  font-size: 80px;
-  color: var(--secondary-color);
-  margin-top: 45px;
+.banner-header-p1,
+.banner-header-contact {
+  height: 45vh;
+  width: 100%;
+  overflow: hidden;
+  background: linear-gradient(
+      45deg,
+      rgba(78, 42, 155, 0.6) 31%,
+      rgba(83, 132, 237, 0.6) 100%
+    ),
+    url("../img/banneroli.webp");
+  background-repeat:no-repeat;
+  background-position: center;
+  background-size: cover;
 }
 
-.banner-header-p1-contact h1 {
-  font-size: 80px;
-  color: var(--secondary-color);
-  margin-top: 140px;
-}
-
-.banner-header-p1-contact hr {
-  font-size: 80px;
-  color: var(--secondary-color);
-  margin-top: 15px;
-}
-
-.banner-header-text-about h1 {
-  font-size: 80px;
-  color: var(--secondary-color);
-  margin-top: 160px;
+/* Textos del banner */
+.banner-header-text,
+.banner-header-text-about,
+.banner-header-text-contact {
+  height: 100%;
+  width: 60%;
+  margin: auto;
+  text-align: center;
+  display: grid;
+  place-content: center;
 }
 
 .banner-header-text h1 {
   font-size: 80px;
   color: var(--secondary-color);
-  margin-top: 150px;
+  margin-top: 10px;
 }
 
-.banner-header-p1 p {
-  font-size: 18px;
+.banner-header-p1 h1 {
+  font-size: 80px;
+  margin-top: 45px;
 }
 
-.banner-header-p1-contact p {
-  font-size: 18px;
-  margin-top: 15px;
+.banner-header-p1-contact h1 {
+  font-size: 60px;
+  margin-top: 10px;
 }
 
-.text-description p {
-  font-size: 20px;
+.banner-header-p1-contact hr {
+  margin-top: 10px;
+}
+
+.text-description-index {
+   font-size: 20px;
+  margin-top: 20px;
+}
+
+.banner-title-about {
+  font-size: 80px;
+  margin-top: 10px;
+}
+.text-description-about {
   text-align: center;
-  
-}
-
-.banner-header-contact{
-  height: 50vh;
-  width: 100%;
-  overflow: hidden;
-  background: #4e2a9b;
-  background: linear-gradient(
-      45deg,
-      rgba(78, 42, 155, 0.6) 31%,
-      rgba(83, 132, 237, 0.6) 100%
-    ),
-    url("../img/banneroli.webp");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-}
-
-.banner-header-text {
-  height: 100%;
-  width: 60%;
-  margin: auto;
-  padding-bottom: 150px;
-  text-align: center;
-  display: grid;
-  place-content: center;
-}
-
-.banner-header-text-about {
-  height: 100%;
-  width: 60%;
-  margin: auto;
-  padding-bottom: 170px;
-  text-align: center;
-  display: grid;
-  place-content: center;
-}
-
-
-.banner-header-text-contact {
-  height: 100%;
-  width: 60%;
-  margin: auto;
-  padding-bottom: 120px;
-  text-align: center;
-  display: grid;
-  place-content: center;
-}
-
-.banner-header-text-contact h1{
-
-  font-size: 40px;
-}
-
-.banner.title {
-  font-size: 3rem;
-  padding-bottom: 0px;
-}
-
-.banner-title {
-  font-size: 6rem;
-  margin-bottom: 40px;
-}
-
-.banner-title-contact h1 {
-   font-size: 6rem;
+  margin-top: 20px;
   margin-bottom: 10px;
 }
 
+.text-about {
+  text-align: center;
+  margin-top: 30px;
+  margin-bottom: 60px;
+  font-size: 20px;
+}
 
+.banner-title-servicio {
+  font-size: 80px;
+  margin-bottom: 15px;
+}
 
-.banner-title span {
+.text-description-servicio {
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+
+.title-servicio {
+    text-align: center;
+  margin-top: 40px;
+  margin-bottom: 10px;
+  font-size: 30px;
+}
+
+.banner-title-servicio span,
+.banner-title-index span,
+.banner-title-about span {
   color: var(--primary-color);
 }
 
-.btn {
-  padding: 5px;
-  background-color: var(--primary-color);
-  border: none;
-  border-radius: 15px;
-  margin-top: 5px;
-  margin-bottom:5px;
-  cursor: pointer;
-}
-
+/* Botones */
+.btn,
 .btn-about {
   padding: 5px;
   background-color: var(--primary-color);
   border: none;
   border-radius: 15px;
   margin-top: 5px;
-  margin-bottom:8px;
   cursor: pointer;
+}
+
+.btn:hover,
+.btn-about:hover {
+  background-color: var(--secondary-color);
+  color: var(--main-color);
+}
+
+.btn-acesso {
+  display: flex;
+  max-width: 200px;
+  margin: auto;
+  padding: 5px;
+  justify-content: center;
+  background-color: var(--primary-color);
+  border: none;
+  border-radius: 15px;
+  margin-top: 5px;
+  cursor: pointer;
+}
+
+.btn-acesso:hover {
+  background-color: var(--secondary-color);
+  color: var(--main-color);
 }
 
 .btn:hover {
@@ -319,35 +324,34 @@ a {
   color: var(--main-color);
 }
 
-/* Catalogo */
+/* =======================================
+   CATÁLOGO / SERVICIOS
+======================================= */
 .container-catalogo {
   font-size: 30px;
   text-align: center;
   margin-bottom: 20px;
 }
 
-.container-servicio h2, data-tile {
- text-align: center;
- padding-bottom: 20px;
- margin-bottom: 20px;
+.container-servicio h2,
+data-tile {
+  text-align: center;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .card-projects {
   width: 1000px;
   display: grid;
-  margin-left: auto;
-  margin-right: auto;
+  margin: auto;
   margin-bottom: 30px;
   grid-template-columns: repeat(3, 1fr);
   gap: 15px;
 }
 
-img {
-  object-fit: cover;
-}
-
 .card img {
   width: 100%;
+  height: 220px;
   border: 3px solid var(--primary-color);
   border-radius: 15px;
 }
@@ -357,37 +361,18 @@ img {
   font-size: 20px;
 }
 
-.card img {
-  width: 100%;
-  height: 220px; 
-  object-fit: cover;
-}
-
 .card:hover img {
   transform: translateY(-15px);
   transition: 1s;
 }
 
-.hireme h3 {
-  font-size: 30px;
-}
-
-.hireme p {
-  padding-bottom: 10px;
-  font-size: 18px;
-}
-
-.hireme .container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 30px;
-}
-
+/* =======================================
+   MAPA
+======================================= */
 .map-container {
   padding-bottom: 60px;
   overflow: hidden;
-  margin: center;
+  margin-top: 30px;
   display: flex;
   justify-content: center;
 }
@@ -395,21 +380,18 @@ img {
 .text-map-container {
   font-size: 30px;
   font-weight: bold;
-  color: #ffffff;
   text-align: center;
   margin-bottom: 60px;
 }
 
-/* Footer */
+/* =======================================
+   FOOTER
+======================================= */
 .main-footer {
   background-color: #333;
   color: #fff;
   padding: 20px;
   text-align: center;
-}
-
-.main-footer p {
-  margin-bottom: 10px;
 }
 
 .main-footer .container {
@@ -427,8 +409,6 @@ img {
 
 .main-footer ul {
   list-style: none;
-  padding: 0;
-  margin: 0;
   display: flex;
 }
 
@@ -436,13 +416,8 @@ img {
   margin-right: 20px;
 }
 
-.main-footer li:last-child {
-  margin-right: 0;
-}
-
 .main-footer a {
   color: #fff;
-  transition: color 0.2s ease;
 }
 
 .main-footer a:hover {
@@ -457,37 +432,12 @@ img {
   margin-top: 5px;
 }
 
-.banner-header-p1 {
-  height: 40vh;
-  width: 100%;
-  overflow: hidden;
-  background: #4e2a9b;
-  background: linear-gradient(
-      45deg,
-      rgba(78, 42, 155, 0.6) 31%,
-      rgba(83, 132, 237, 0.6) 100%
-    ),
-    url("../img/portfolio/proyecto-1.png");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-}
-
-/* ===========================
-   COMPATIBILIDAD MÓVIL
-   =========================== */
-
-img {
-  max-width: 100%;
-  height: auto;
-}
-
-/* 📱 Móviles (máx. 768px) */
+/* =======================================
+   RESPONSIVE - MOBILE
+======================================= */
 @media (max-width: 768px) {
-  /* Navbar */
   .nav-container {
     flex-direction: column;
-    align-items: center;
     text-align: center;
   }
 
@@ -497,180 +447,42 @@ img {
     margin-top: 10px;
   }
 
-  .navbar ul li {
-    margin-left: 0;
-  }
-
-  /* Banner */
-  .banner-header-text {
-    width: 90%;
-    padding: 20px 10px;
+  .card-projects {
+    width: 100%;
+    grid-template-columns: 1fr;
+    padding: 0 15px;
   }
 
   .banner-title {
     font-size: 2.5rem;
   }
 
-  .banner-header-p1 h1 {
-    font-size: 2.2rem;
-  }
-
-  .banner-header-p1-about h1 {
-    font-size: 3.2rem;
-    margin-top: 170px;
-  }
-
-  .banner-header-p1 p {
-    font-size: 1rem;
-    line-height: 1.4;
-  }
-
-  /* Botones */
-  .btn {
-    padding: 10px 18px;
-    font-size: 16px;
-    display: inline-block;
-  }
-
-  /* Catálogo */
-  .card-projects {
-    width: 100%;
-    grid-template-columns: 1fr;
-    padding: 0 15px;
-    margin: 0 auto 20px;
-  }
-
-  .card img {
-    height: auto;
-  }
-
-  /* Texto general */
-  .title {
-    font-size: 1.5rem;
-  }
-
-  /* Footer */
-  .main-footer .container {
-    flex-direction: column;
-    text-align: center;
-    gap: 10px;
-  }
-
-  .main-footer ul {
-    justify-content: center;
-    gap: 15px;
-  }
-
-  .main-footer li {
-    margin-right: 0;
-  }
-
   .banner-header-text h1 {
-  font-size: 80px;
-  color: var(--secondary-color);
-  margin-top: 10px;
+    font-size: 50px;
+    margin-top: 10px;
   }
 
-    .banner-header-p1-about h1 {
-    font-size: 3.2rem;
-    margin-top: 170px;
+  .title-servicio {
+    font-size: 28px;
+    font-weight: bold;
+    text-align: center;
   }
-
-.map-container {
-  
-  padding-bottom: 30px;
-  overflow: hidden;
-  margin: center;
-  display: flex;
-  justify-content: center;
 }
 
-.text-map-container {
-  font-size: 30px;
-  font-weight: bold;
-  color: #ffffff;
-  text-align: center;
-  margin-bottom: 60px;
-}
-
-.container-servicio h2, data-tile {
- text-align: center;
- padding-bottom: 20px;
- margin-bottom: 20px;
- font-size: 20px;
-}
-
-.title-servicio {
-  font-size: 28px;   /* antes estaba en 36px o 40px, ahora más pequeño */
-  font-weight: bold;
-  text-align: center;
-  color: var(--secondary-color);
-  margin-bottom: 25px;
-}
-
-.banner-header-text h1 {
-  font-size: 50px;
-  
-}
-
-/* Subtítulo decorativo (el data-title) */
-.title-servicio::after {
-  content: attr(data-title);
-  display: block;
-  font-size: 20px;  /* también lo reducimos un poco */
-  font-weight: 400;
-  color: var(--primary-color);
-  margin-top: 6px;
-}
-
-}
-
-/* 📱 Tablets (769px a 1024px) */
+/* =======================================
+   RESPONSIVE - TABLETS
+======================================= */
 @media (max-width: 1024px) and (min-width: 769px) {
   .card-projects {
     width: 100%;
     grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-    padding: 0 20px;
   }
 
   .banner-title {
     font-size: 3.5rem;
   }
 
-.banner-header-text h1 {
-  font-size: 80px;
-  color: var(--secondary-color);
-  margin-top: 1300px;
+  .map-container {
+    padding-bottom: 30px;
   }
-
-  .banner-header-text h1 {
-  font-size: 80px;
-  color: var(--secondary-color);
-  margin-top: 10px;
-  }
-
-    .banner-header-p1-about h1 {
-    font-size: 3.2rem;
-    margin-top: 170px;
-  }
-
-.map-container {
-  
-  padding-bottom: 30px;
-  overflow: hidden;
-  margin: center;
-  display: flex;
-  justify-content: center;
-}
-
-.text-map-container {
-  font-size: 30px;
-  font-weight: bold;
-  color: #ffffff;
-  text-align: center;
-  margin-bottom: 60px;
-}
-
-
 }
