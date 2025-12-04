@@ -35,7 +35,7 @@
             <li><a href="{{ url_for('contact') }}">Contáctanos</a></li>
 
             {% if current_user.is_authenticated %}
-              <li><a href="{{ url_for('panel') }}">Mi Panel</a></li>
+              <li><a href="{{ url_for('perfil') }}">Mi Panel</a></li>
               <li><a href="{{ url_for('logout') }}">Cerrar sesión</a></li>
             {% else %}
               <li><a href="{{ url_for('login') }}">Iniciar sesión</a></li>

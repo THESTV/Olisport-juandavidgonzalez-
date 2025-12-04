@@ -1,36 +1,63 @@
 {% extends "base.html" %}
 
-{% block title %}Crear Cuenta | OliSport{% endblock %}
+{% block title %}Crear Cuenta - OliSport{% endblock %}
 
 {% block content %}
 
-<div class="auth-container">
-    <h2 class="auth-title">Crear Cuenta</h2>
-    
-    <form method="POST" class="auth-form">
+<section class="register-section">
 
-        <div class="form-group">
-            <label for="nombre">Nombre completo</label>
-            <input type="text" id="nombre" name="nombre" placeholder="Escribe tu nombre" required>
+    <div class="register-box">
+
+        <div class="register-logo">
+            <img src="{{ url_for('static', filename='img/portfolio/logo-olisport.PNG') }}" alt="OliSport Logo">
         </div>
 
-        <div class="form-group">
-            <label for="correo">Correo electrónico</label>
-            <input type="email" id="correo" name="correo" placeholder="ejemplo@correo.com" required>
+        <h2 class="register-title">Crear Cuenta</h2>
+        <p class="register-subtitle">Únete a OliSport y comienza ahora</p>
+
+        <!-- MENSAJES FLASH -->
+        <div class="flash-container">
+            {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            {% endwith %}
         </div>
 
-        <div class="form-group">
-            <label for="password">Contraseña</label>
-            <input type="password" id="password" name="password" placeholder="Mínimo 6 caracteres" required>
-        </div>
+        <form method="POST" class="form-container">
 
-        <button type="submit" class="btn primary-btn">Crear cuenta</button>
-    </form>
+            <div class="form-group">
+                <label>Nombre completo</label>
+                <input type="text" name="nombre" placeholder="Tu nombre" required>
+            </div>
 
-    <p class="auth-footer">
-        ¿Ya tienes una cuenta?
-        <a href="{{ url_for('login') }}">Inicia sesión</a>
-    </p>
-</div>
+            <div class="form-group">
+                <label>Correo electrónico</label>
+                <input type="email" name="correo" placeholder="correo@ejemplo.com" required>
+            </div>
+
+            <div class="form-group">
+                <label>Contraseña</label>
+                <input type="password" name="password" placeholder="Mínimo 6 caracteres" required>
+            </div>
+
+            <div class="form-group">
+                <label>Confirmar contraseña</label>
+                <input type="password" name="password2" placeholder="Repite tu contraseña" required>
+            </div>
+
+            <button type="submit" class="btn register-btn">Crear cuenta</button>
+        </form>
+
+        <p class="form-footer">
+            ¿Ya tienes cuenta?
+            <a href="{{ url_for('login') }}">Inicia sesión</a>
+        </p>
+
+    </div>
+
+</section>
 
 {% endblock %}

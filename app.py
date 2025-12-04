@@ -1,26 +1,29 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import db, User, Whitelist
 import os
+import jwt
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
 
-# Clave secreta para sesiones
+# Clave secreta
 app.config['SECRET_KEY'] = "clave_secreta_olisport"
 
-# Ruta de la base de datos dentro de /database
+# Ruta DB
 db_path = os.path.join(os.path.dirname(__file__), "database", "olisport.db")
 app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{db_path}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
 
-# Configuración de flask-login
+# Flask-Login
 login_manager = LoginManager()
 login_manager.login_view = 'login'
 login_manager.init_app(app)
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -28,7 +31,7 @@ def load_user(user_id):
 
 
 # -----------------------------
-#        RUTAS PÚBLICAS
+#           HOME
 # -----------------------------
 @app.route('/')
 def index():
@@ -50,64 +53,81 @@ def servicio():
 # -----------------------------
 #           REGISTRO
 # -----------------------------
-@app.route('/register', methods=['GET', 'POST'])
+# -----------------------------
+#           REGISTRO
+# -----------------------------
+@app.route("/register", methods=["GET", "POST"])
 def register():
-    if request.method == 'POST':
-        nombre = request.form['nombre']
-        correo = request.form['correo']
-        password = request.form['password']
+    if request.method == "POST":
+        nombre = request.form["nombre"].strip()
+        correo = request.form["correo"].strip().lower()
+        password = request.form["password"]
+        confirm = request.form["password2"]
 
-        # Verificar si el correo ya existe
-        usuario = User.query.filter_by(correo=correo).first()
-        if usuario:
+        # Validar correo repetido
+        user = User.query.filter_by(correo=correo).first()
+        if user:
             flash("El correo ya está registrado", "error")
-            return redirect(url_for('register'))
+            return render_template("register.html")
 
-        nuevo_usuario = User(
-            nombre=nombre,
-            correo=correo,
-            password_hash=generate_password_hash(password)
-        )
+        # Validar confirmación
+        if password != confirm:
+            flash("Las contraseñas no coinciden", "error")
+            return render_template("register.html")
 
-        db.session.add(nuevo_usuario)
+        # Crear usuario
+        hashed = generate_password_hash(password)
+        nuevo = User(nombre=nombre, correo=correo, password_hash=hashed)
+        db.session.add(nuevo)
         db.session.commit()
 
-        flash("Usuario registrado correctamente. Ahora puedes iniciar sesión.", "success")
-        return redirect(url_for('login'))
+        flash("Cuenta creada correctamente. Ahora inicia sesión.", "success")
+        return redirect(url_for("login"))
 
     return render_template("register.html")
 
-
 # -----------------------------
-#            LOGIN
+#             LOGIN
 # -----------------------------
-@app.route('/login', methods=['GET', 'POST'])
+@app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        correo = request.form["correo"]
+        correo = request.form["correo"].strip().lower()
         password = request.form["password"]
 
-        usuario = User.query.filter_by(correo=correo).first()
+        user = User.query.filter_by(correo=correo).first()
 
-        if not usuario or not check_password_hash(usuario.password_hash, password):
-            flash("Correo o contraseña incorrectos", "error")
-            return redirect(url_for("login"))
+        if not user:
+            flash("Correo no encontrado. Verifique nuevamente.", "error")
+            # Mantener correo en el formulario
+            return render_template("login.html", correo=correo)
 
-        # Iniciar sesión
-        login_user(usuario)
+        if not check_password_hash(user.password_hash, password):
+            flash("Contraseña incorrecta. Digítela nuevamente.", "error")
+            # Mantener correo en el formulario
+            return render_template("login.html", correo=correo)
 
-        # Verificar whitelist
-        acceso = Whitelist.query.filter_by(id_usuario=usuario.id).first()
+        # LOGIN CORRECTO
+        login_user(user)
 
-        # Si está en whitelist → admin
+        token = jwt.encode(
+            {
+                "id": user.id,
+                "exp": datetime.utcnow() + timedelta(hours=3)
+            },
+            app.config["SECRET_KEY"],
+            algorithm="HS256"
+        )
+
+        flash("Inicio de sesión exitoso", "success")
+
+        acceso = Whitelist.query.filter_by(id_usuario=user.id).first()
         if acceso:
             return redirect(url_for("admin"))
 
-        # Si NO está permitido → cliente normal
         return redirect(url_for("perfil"))
 
     return render_template("login.html")
-
 
 # -----------------------------
 #        PERFIL CLIENTE
@@ -119,17 +139,15 @@ def perfil():
 
 
 # -----------------------------
-#        ADMIN PANEL
+#         ADMIN PANEL
 # -----------------------------
 @app.route('/admin')
 @login_required
 def admin():
+    autorizado = Whitelist.query.filter_by(id_usuario=current_user.id).first()
 
-    # Validar si está en whitelist
-    acceso = Whitelist.query.filter_by(id_usuario=current_user.id).first()
-
-    if not acceso:
-        return "Acceso no autorizado"
+    if not autorizado:
+        return "Acceso no autorizado", 403
 
     return render_template("admin.html", usuario=current_user)
 
@@ -139,11 +157,40 @@ def admin():
 # -----------------------------
 @app.route('/logout')
 def logout():
+    session.pop("token", None)
     logout_user()
+    flash("Sesión cerrada correctamente", "success")
     return redirect(url_for('index'))
 
 
-# Crear la base de datos si no existe
+# -----------------------------
+#        API PARA POSTMAN
+# -----------------------------
+@app.route('/api/usuarios', methods=['GET'])
+def api_usuarios():
+    usuarios = User.query.all()
+    data = [{
+        "id": u.id,
+        "nombre": u.nombre,
+        "correo": u.correo
+    } for u in usuarios]
+
+    return jsonify(data)
+
+
+@app.route('/api/whitelist', methods=['GET'])
+def api_whitelist():
+    items = Whitelist.query.all()
+    data = [{
+        "id": w.id,
+        "id_usuario": w.id_usuario,
+        "fecha_autorizacion": w.fecha_autorizacion
+    } for w in items]
+
+    return jsonify(data)
+
+
+# Crear base de datos
 with app.app_context():
     os.makedirs("database", exist_ok=True)
     db.create_all()
