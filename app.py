@@ -132,11 +132,35 @@ def login():
 # -----------------------------
 #        PERFIL CLIENTE
 # -----------------------------
-@app.route("/perfil")
+@app.route("/perfil", methods=["GET", "POST"])
 @login_required
 def perfil():
-    return render_template("perfil.html", usuario=current_user)
+    if request.method == "POST":
+        usuario = current_user
 
+        usuario.nombre = request.form["nombre"]
+        usuario.correo = request.form["correo"]
+        usuario.celular = request.form.get("celular") or None
+        usuario.direccion = request.form.get("direccion") or None
+
+        nueva_pass = request.form.get("password")
+        if nueva_pass:
+            usuario.password_hash = generate_password_hash(nueva_pass)
+
+        db.session.commit()
+
+        flash("Actualización exitosa. Enviando a Market...", "success")
+
+        return render_template("perfil.html", usuario=current_user, redirect_market=True)
+
+    return render_template("perfil.html", usuario=current_user, redirect_market=False)
+
+# -----------------------------
+#         MARKET
+# -----------------------------
+@app.route("/market")
+def market():
+    return render_template("market.html")
 
 # -----------------------------
 #         ADMIN PANEL

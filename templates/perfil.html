@@ -1,36 +1,143 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Olisport Perfil" />
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" crossorigin="anonymous" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style-responsive.css') }}" />
+    <title>Mi Perfil - OliSport</title>
+</head>
+<body>
 
-{% block title %}Registrarse{% endblock %}
+<!-- ===================== NAVBAR ===================== -->
+<header>
+    <nav class="navbar">
+        <div class="nav-container">
+            <!-- LOGO -->
+            <div class="logo">
+                <a href="{{ url_for('index') }}">
+                    <img src="{{ url_for('static', filename='img/portfolio/logo-olisport.PNG') }}" alt="logo">
+                </a>
+            </div>
 
-{% block content %}
+            <!-- LINKS VISIBLES -->
+            <ul class="nav-links">
+                <li><a href="{{ url_for('index') }}">Inicio</a></li>
 
-<div class="auth-box">
-    <h2 class="auth-title">Crear Cuenta</h2>
+                {% if current_user.is_authenticated %}
+                    <!-- NUEVO: MARKET -->
+                    <li><a href="{{ url_for('market') }}">Market</a></li>
 
-    <form method="POST" class="auth-form">
+                    <li><a href="{{ url_for('perfil') }}" class="current">Mi Perfil</a></li>
+                    <li><a href="{{ url_for('logout') }}">Cerrar sesión</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('login') }}">Iniciar sesión</a></li>
+                    <li><a href="{{ url_for('register') }}">Registrarse</a></li>
+                {% endif %}
+            </ul>
 
-        <div class="form-group">
-            <label for="nombre">Nombre completo</label>
-            <input id="nombre" type="text" name="nombre" required>
+            <!-- HAMBURGUESA -->
+            <div class="hamburger" id="hamburger">☰</div>
+
+            <!-- MENÚ DESPLEGABLE (SECUNDARIO) -->
+            <div class="hamburger-menu" id="hamburgerMenu">
+                <a href="{{ url_for('about') }}">Quiénes somos</a>
+                <a href="{{ url_for('servicio') }}">Servicios</a>
+                <a href="{{ url_for('contact') }}">Contáctanos</a>
+
+                {% if current_user.is_authenticated %}
+
+                {% endif %}
+            </div>
         </div>
+        <hr/>
+    </nav>
+</header>
 
-        <div class="form-group">
-            <label for="correo">Correo electrónico</label>
-            <input id="correo" type="email" name="correo" required>
-        </div>
 
-        <div class="form-group">
-            <label for="password">Contraseña</label>
-            <input id="password" type="password" name="password" required>
-        </div>
-
-        <button type="submit" class="btn-primary">Registrarme</button>
-    </form>
-
-    <p class="auth-switch">
-        ¿Ya tienes cuenta?  
-        <a href="{{ url_for('login') }}">Inicia sesión</a>
-    </p>
+<!-- MENSAJES FLASH -->
+<div class="flash-container">
+    {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="flash-message {{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
 </div>
 
-{% endblock %}
+<!-- ===================== PERFIL ===================== -->
+<section class="perfil-unificado">
+
+    <div class="perfil-card">
+
+        <!-- FOTO / LOGO -->
+        <div class="perfil-header">
+            <img src="{{ url_for('static', filename='img/portfolio/logo-olisport.PNG') }}" class="perfil-avatar">
+            <h2>{{ usuario.nombre }}</h2>
+            <p class="perfil-correo">{{ usuario.correo }}</p>
+        </div>
+
+        <hr class="divider">
+
+        <!-- FORMULARIO TODO EN UNO -->
+        <form method="POST" class="perfil-form">
+
+            <h3>Información Personal</h3>
+
+            <label>Nombre completo</label>
+            <input type="text" name="nombre" value="{{ usuario.nombre }}" required>
+
+            <label>Correo electrónico</label>
+            <input type="email" name="correo" value="{{ usuario.correo }}" required>
+
+            <label>Número de celular</label>
+            <input type="text" name="celular" value="{{ usuario.celular or '' }}">
+
+            <label>Dirección</label>
+            <input type="text" name="direccion" value="{{ usuario.direccion or '' }}">
+
+            <label>Nueva contraseña (opcional)</label>
+            <input type="password" name="password" placeholder="••••••••">
+
+            <button class="btn-primary guardar-btn" type="submit">Guardar Cambios</button>
+        </form>
+
+    </div>
+
+</section>
+
+{% if redirect_market %}
+<script>
+    setTimeout(() => {
+        window.location.href = "{{ url_for('market') }}";
+    }, 3000);
+</script>
+{% endif %}
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="main-footer">
+    <p>&copy; 2025 OliSport — Todos los derechos reservados.</p>
+    <div class="container">
+        <p class="small">Catálogo 2025</p>
+        <ul>
+            <li><a href="#"><i class="fab fa-facebook"></i></a></li>
+            <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+            <li><a href="#"><i class="fab fa-youtube"></i></a></li>
+        </ul>
+    </div>
+</footer>
+
+<!-- ===================== JS MENÚ HAMBURGUESA ===================== -->
+<script>
+    document.getElementById("hamburger").addEventListener("click", function () {
+        const menu = document.getElementById("hamburgerMenu");
+        menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+    });
+</script>
+
+</body>
+</html>

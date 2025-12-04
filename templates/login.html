@@ -12,34 +12,45 @@
 </head>
 <body>
 
-    <!-- ===================== NAVBAR ===================== -->
-    <header>
-        <nav class="navbar">
-            <div class="nav-container">
-                <div class="logo">
-                    <a href="{{ url_for('index') }}">
-                        <img src="{{ url_for('static', filename='img/portfolio/logo-olisport.PNG') }}" alt="logo">
-                    </a>
-                </div>
-
-                <ul>
-                    <li><a href="{{ url_for('index') }}">Inicio</a></li>
-                    <li><a href="{{ url_for('about') }}">Quiénes somos</a></li>
-                    <li><a href="{{ url_for('servicio') }}">Servicios</a></li>
-                    <li><a href="{{ url_for('contact') }}">Contáctanos</a></li>
-
-                    {% if current_user.is_authenticated %}
-                        <li><a href="{{ url_for('perfil') }}">Mi Panel</a></li>
-                        <li><a href="{{ url_for('logout') }}">Cerrar sesión</a></li>
-                    {% else %}
-                        <li><a href="{{ url_for('login') }}" class="current">Iniciar sesión</a></li>
-                        <li><a href="{{ url_for('register') }}">Registrarse</a></li>
-                    {% endif %}
-                </ul>
+ <!-- ===================== NAVBAR ===================== -->
+<header>
+    <nav class="navbar">
+        <div class="nav-container">
+            <!-- LOGO -->
+            <div class="logo">
+                <a href="{{ url_for('index') }}">
+                    <img src="{{ url_for('static', filename='img/portfolio/logo-olisport.PNG') }}" alt="logo">
+                </a>
             </div>
-            <hr/>
-        </nav>
-    </header>
+
+            <!-- LINKS VISIBLES -->
+            <ul class="nav-links">
+                <li><a href="{{ url_for('index') }}">Inicio</a></li>
+
+                {% if current_user.is_authenticated %}
+                    <li><a href="{{ url_for('perfil') }}">Mi Perfil</a></li>
+                    <li><a href="{{ url_for('logout') }}">Cerrar sesión</a></li> 
+                    
+                {% else %}
+                    <li><a href="{{ url_for('login') }}" class="current">Iniciar sesión</a></li>
+                    <li><a href="{{ url_for('register') }}">Registrarse</a></li>
+
+                {% endif %}
+            </ul>
+
+            <!-- HAMBURGUESA -->
+            <div class="hamburger" id="hamburger">☰</div>
+
+            <!-- MENÚ DESPLEGABLE (SECUNDARIO) -->
+            <div class="hamburger-menu" id="hamburgerMenu">
+                <a href="{{ url_for('about') }}">Quiénes somos</a>
+                <a href="{{ url_for('servicio') }}">Servicios</a>
+                <a href="{{ url_for('contact') }}">Contáctanos</a>
+            </div>
+        </div>
+        <hr/>
+    </nav>
+</header>
 
     <!-- ===================== LOGIN FORM ===================== -->
     <main>
@@ -116,6 +127,15 @@
             </ul>
         </div>
     </footer>
+
+    <!-- ===================== JS MENÚ HAMBURGUESA ===================== -->
+<script>
+    document.getElementById("hamburger").addEventListener("click", function () {
+        const menu = document.getElementById("hamburgerMenu");
+        menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+    });
+</script>
+
 
 </body>
 </html>
