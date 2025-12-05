@@ -265,7 +265,7 @@ img {
 .banner-header-text h1 {
   font-size: 80px;
   color: var(--secondary-color);
-  margin-top: 10px;
+  margin-top: 5px;
 }
 
 .banner-header-p1 h1 {
@@ -298,22 +298,24 @@ img {
 }
 
 .text-about {
+  max-width: 850px;
+  margin: 30px auto;
   text-align: center;
-  margin-top: 30px;
-  margin-bottom: 60px;
-  font-size: 20px;
-}
-
+  line-height: 1.8;
+  font-size: 1.1rem;
+  color: var(--secondary-color);
 .banner-title-servicio {
   font-size: 80px;
-  margin-bottom: 15px;
-}
+}}
 
 .text-description-servicio {
+  max-width: 900px;
+  margin: 50px auto 30px;
+  padding: 25px 35px;
   text-align: center;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  font-size: 20px;
+  font-size: 1.2rem;
+  line-height: 1.8;
+  color: var(--secondary-color);
 }
 
 .title-servicio {
@@ -329,86 +331,202 @@ img {
   color: var(--primary-color);
 }
 
-/* Botones */
+/* =======================================
+   BOTONES — ESTILO PRO UNIFICADO
+======================================= */
+
+/* Botones principales */
 .btn,
-.btn-about {
-  padding: 5px;
-  background-color: var(--primary-color);
-  border: none;
-  border-radius: 15px;
-  margin-top: 5px;
-  cursor: pointer;
-}
-
-.btn:hover,
-.btn-about:hover {
-  background-color: var(--secondary-color);
-  color: var(--main-color);
-}
-
+.btn-about,
 .btn-acesso {
-  display: flex;
+  display: inline-block;
+  padding: 15px 40px;
+  margin: 5px 0;
+  background: linear-gradient(90deg, var(--primary-color), #00b8d4);
+  border-radius: 50px;
+  font-weight: bold;
+  color: black;
+  text-align: center;
+  cursor: pointer;
+  border: none;
+  transition: 0.3s ease;
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.5);
+}
+
+/* Ajuste especial SOLO para .btn-acesso */
+.btn-acesso {
   max-width: 200px;
   margin: auto;
-  padding: 5px;
+  display: flex;
   justify-content: center;
-  background-color: var(--primary-color);
-  border: none;
-  border-radius: 15px;
-  margin-top: 5px;
-  cursor: pointer;
 }
 
+/* Hover general */
+.btn:hover,
+.btn-about:hover,
 .btn-acesso:hover {
-  background-color: var(--secondary-color);
+  transform: scale(1.05);
+  background: var(--secondary-color);
   color: var(--main-color);
-}
-
-.btn:hover {
-  background-color: var(--secondary-color);
-  color: var(--main-color);
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.8);
 }
 
 /* =======================================
-   CATÁLOGO / SERVICIOS
+   BOTONES ESTILO PRO (UNIFICADO)
 ======================================= */
+
+.btn,
+.btn-about {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0px 40px;
+  text-decoration: none;
+  cursor: pointer;
+  font-weight: 700;
+
+  /* Estilo Premium */
+  background: linear-gradient(90deg, var(--primary-color), #00b8d4);
+  color: #000;
+  border: none;
+  border-radius: 50px;
+
+  /* Glow */
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.5);
+  transition: all 0.3s ease;
+}
+
+/* Hover Animado */
+.btn:hover,
+.btn-about:hover {
+  transform: scale(1.05);
+  background: var(--secondary-color);
+  color: var(--main-color);
+  box-shadow: 0 0 18px rgba(0, 229, 255, 0.8);
+}
+
+/* Para centrar el botón en ABOUT */
+.text-about .btn-about {
+  margin: 20px auto;
+  display: flex;
+}
+
+/* =======================================
+   CATÁLOGO / SERVICIOS (MEJORADO)
+======================================= */
+
 .container-catalogo {
   font-size: 30px;
   text-align: center;
   margin-bottom: 20px;
 }
 
-.container-servicio h2,
-data-tile {
+/* Título Servicios */
+.container-servicio h2 {
   text-align: center;
   padding-bottom: 20px;
   margin-bottom: 20px;
+  font-size: 32px;
+  color: var(--secondary-color);
+  position: relative;
+}
+
+.container-servicio h2::after {
+  content: "";
+  width: 80px;
+  height: 3px;
+  background: var(--primary-color);
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Grid responsivo */
+.card-projects {
+  width: 100%;
+  max-width: 1100px;
+  display: grid;
+  margin: auto;
+  margin-bottom: 40px;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 25px;
+}
+
+/* Card mejorado */
+.card {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(5px);
+  border-radius: 18px;
+  padding: 25px 20px;
+  text-align: center;
+  color: var(--secondary-color);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transition: 0.3s ease;
+}
+
+/* Iconos */
+.card i {
+  color: var(--primary-color);
+  font-size: 42px !important;
+  margin-bottom: 12px;
+}
+
+/* Títulos de cada servicio */
+.card h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: var(--primary-color);
+}
+
+/* Texto interno */
+.card p {
+  font-size: 14px;
+  line-height: 1.6;
+  opacity: 0.9;
+}
+
+/* Hover elegante */
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 10px 28px rgba(0, 229, 255, 0.35);
+  border-color: var(--primary-color);
 }
 
 .card-projects {
-  width: 1000px;
+  width: 1100px;
   display: grid;
   margin: auto;
-  margin-bottom: 30px;
+  margin-bottom: 50px;
   grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
+  gap: 25px;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.03);
+  padding: 20px;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 229, 255, 0.3);
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.15);
+  backdrop-filter: blur(10px);
+  transition: transform 0.25s ease, box-shadow 0.3s ease;
+  text-align: center;
+}
+
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0px 0px 25px rgba(0, 229, 255, 0.4);
 }
 
 .card img {
   width: 100%;
-  height: 220px;
-  border: 3px solid var(--primary-color);
+  height: 230px;
   border-radius: 15px;
-}
-
-.card h3 {
-  text-align: center;
-  font-size: 20px;
-}
-
-.card:hover img {
-  transform: translateY(-15px);
-  transition: 1s;
+  object-fit: cover;
+  margin-bottom: 15px;
+  border: 2px solid var(--primary-color);
 }
 
 /* =======================================

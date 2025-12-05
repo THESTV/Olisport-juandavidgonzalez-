@@ -27,25 +27,47 @@
 
   <body>
     <header>
-      <nav class="navbar">
-        <div class="nav-container">
-          <div class="logo">
-            <a href="{{ url_for('index') }}">
-              <img src="{{ url_for('static', filename='img/portfolio/logo-olisport.PNG') }}" alt="logo">
+  <nav class="navbar">
+    <div class="nav-container">
+
+      <!-- LOGO + ICONOS -->
+      <div class="logo-area">
+        <a href="{{ url_for('index') }}" class="logo">
+          <img src="{{ url_for('static', filename='img/portfolio/logo-olisport.PNG') }}" alt="logo">
+        </a>
+
+        <div class="auth-icons">
+          {% if current_user.is_authenticated %}
+            <a href="{{ url_for('perfil') }}" class="icon-btn" title="Mi Perfil">
+              <i class="fas fa-user-circle"></i>
             </a>
-          </div>
-
-          <ul>
-            <li><a href="{{ url_for('index') }}">Inicio</a></li>
-            <li><a href="{{ url_for('about') }}" class="current">Quiénes somos</a></li>
-            <li><a href="{{ url_for('servicio') }}">Servicios</a></li>
-            <li><a href="{{ url_for('contact') }}">Contáctanos</a></li>
-          </ul>
+            <a href="{{ url_for('logout') }}" class="icon-btn" title="Cerrar sesión">
+              <i class="fas fa-sign-out-alt"></i>
+            </a>
+          {% else %}
+            <a href="{{ url_for('login') }}" class="icon-btn" title="Iniciar sesión">
+              <i class="fas fa-user"></i>
+            </a>
+            <a href="{{ url_for('register') }}" class="icon-btn" title="Registrarse">
+              <i class="fas fa-user-plus"></i>
+            </a>
+          {% endif %}
         </div>
+      </div>
 
-        <hr/>
-        <hr/>
-      </nav>
+      <!-- MENÚ PRINCIPAL (YA NO OCULTO) -->
+      <ul class="nav-links">
+        <li><a href="{{ url_for('index') }}">Inicio</a></li>
+        <li><a href="{{ url_for('about') }}"class="current">Quiénes somos</a></li>
+        <li><a href="{{ url_for('servicio') }}">Servicios</a></li>
+        <li><a href="{{ url_for('contact') }}">Contáctanos</a></li>
+      </ul>
+
+      <hr />
+    </div>
+  </nav>
+</header>
+
 
       <section class="banner-header-p1-about">
         <div class="banner-header">
@@ -63,24 +85,23 @@
     </header>
 
     <main>
-      <section>
-        <div class="text-about">
-          <p>
-            Somos una microempresa especializada en la venta de zapatillas de las mejores marcas internacionales,
-            ofreciendo una amplia variedad de modelos y estilos de alta calidad.
-            <br><br>
-            Nuestra misión es brindarte la mejor experiencia de compra, con productos auténticos y un servicio personalizado.
-            Nuestro equipo está aquí para ayudarte a encontrar la mejor opción para tu emprendimiento o uso cotidiano,
-            asesorándote en la elección del calzado perfecto que se adapte a tus necesidades y estilo.
-          </p>
+     <section>
+  <div class="text-about">
+    <p>
+      Somos una microempresa especializada en la venta de zapatillas de las mejores marcas internacionales,
+      ofreciendo una amplia variedad de modelos y estilos de alta calidad.
+      <br><br>
+      Nuestra misión es brindarte la mejor experiencia de compra, con productos auténticos y un servicio personalizado.
+      Nuestro equipo está aquí para ayudarte a encontrar la mejor opción para tu emprendimiento o uso cotidiano,
+      asesorándote en la elección del calzado perfecto que se adapte a tus necesidades y estilo.
+    </p>
 
-          <a href="{{ url_for('contact') }}" class="btn-about">
-            <i class="fa fa-mobile" style="margin-top: 40px; padding-top: 20px; color: #000000;"></i>
-            <span style="color: #000000;">CONTÁCTANOS</span>
-          </a>
-
-        </div>
-      </section>
+    <a href="{{ url_for('contact') }}" class="btn-about">
+      <i class="fa fa-mobile"></i>
+      CONTÁCTANOS
+    </a>
+  </div>
+</section>
 
       <hr/>
       <hr/>
