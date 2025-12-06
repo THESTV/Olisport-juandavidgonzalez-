@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Panel Admin | OliSport" />
 
-    <!-- Fuentes y estilos -->
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" crossorigin="anonymous" />
 
@@ -14,30 +13,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}" />
 
     <title>Panel de Administración | OliSport</title>
-
-    <style>
-        .nav-links-left {
-            display: flex;
-            gap: 25px;
-            align-items: center;
-        }
-
-        .nav-links-right {
-            margin-left: auto;
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-
-        .navbar ul {
-            display: flex;
-            list-style: none;
-        }
-
-        .navbar a {
-            text-decoration: none;
-        }
-    </style>
 </head>
 
 <body>
@@ -46,14 +21,12 @@
     <nav class="navbar">
         <div class="nav-container">
 
-            <!-- LOGO -->
             <div class="logo">
                 <a href="{{ url_for('index') }}">
                     <img src="{{ url_for('static', filename='img/portfolio/logo-olisport.PNG') }}" alt="logo">
                 </a>
             </div>
 
-            <!-- MENU IZQUIERDO -->
             <ul class="nav-links-left">
                 <li><a href="{{ url_for('index') }}">Inicio</a></li>
 
@@ -63,7 +36,6 @@
                 {% endif %}
             </ul>
 
-            <!-- MENU DERECHA -->
             <ul class="nav-links-right">
                 {% if current_user.is_authenticated %}
                     <li><a href="{{ url_for('perfil') }}">Mi Perfil</a></li>
@@ -88,99 +60,129 @@
 </header>
 
 <main>
-    <section class="banner-header-p1-index">
-        <div class="banner-header">
-            <div class="banner-header-text">
-                <h1 class="banner-title-index">Panel de <span>Administración</span></h1>
 
-                <div class="text-description-index">
-                    <hr />
-                    <p>
-                        Bienvenido <strong>{{ usuario.nombre }}</strong>.  
-                        Aquí puedes gestionar usuarios, roles y whitelist.
-                    </p>
-                </div>
+<section class="banner-header-p1-index">
+    <div class="banner-header">
+        <div class="banner-header-text">
+            <h1 class="banner-title-index">Panel de <span>Administración</span></h1>
+
+            <div class="text-description-index">
+                <hr />
+                <p>
+                    Bienvenido <strong>{{ usuario.nombre }}</strong>.
+                    Aquí puedes gestionar usuarios, roles y whitelist.
+                </p>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <section class="section Catalogo">
-        <div class="container-catalogo">
-            <h3 class="title">USUARIOS REGISTRADOS</h3>
-        </div>
-    </section>
 
-    <!-- TARJETA ADMIN -->
-    <section>
-        <div class="admin-card">
+<section class="section Catalogo">
+    <div class="container-catalogo">
+        <h3 class="title">USUARIOS REGISTRADOS</h3>
+    </div>
+</section>
 
-            <table class="tabla-usuarios">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Correo</th>
-                        <th>Rol</th>
-                        <th>Whitelist</th>
-                        <th class="acciones-th">Acciones</th>
-                    </tr>
-                </thead>
 
-                <tbody>
-                {% for u in usuarios %}
-                    <tr>
-                        <td>{{ u.id }}</td>
-                        <td>{{ u.nombre }}</td>
-                        <td>{{ u.correo }}</td>
+<section>
+    <div class="admin-card">
 
-                        <!-- ROL -->
-                        <td>
-                            {% if u.rol == "admin" %}
-                                <span class="badge admin">Admin</span>
-                            {% else %}
-                                <span class="badge trabajador">Trabajador</span>
-                            {% endif %}
-                        </td>
+        <table class="tabla-usuarios">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Correo</th>
+                    <th>Rol</th>
+                    <th>Whitelist</th>
+                    <th class="acciones-th">Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            {% for u in usuarios %}
+                {% set es_admin_principal = (u.correo == "admin@olisport.com") %}
+
+                <tr>
+                    <td>{{ u.id }}</td>
+                    <td>{{ u.nombre }}</td>
+                    <td>{{ u.correo }}</td>
+
+                    <td>
+                        {% if u.rol == "admin" %}
+                            <span class="badge admin">Admin</span>
+                        {% elif u.rol == "trabajador" %}
+                            <span class="badge trabajador">Trabajador</span>
+                        {% else %}
+                            <span class="badge usuario">Usuario</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if u.whitelist %}
+                            <span class="badge ok">Autorizado ✔</span>
+                        {% else %}
+                            <span class="badge no">No autorizado</span>
+                        {% endif %}
+                    </td>
+
+                    <td class="acciones-td">
+
 
                         <!-- WHITELIST -->
-                        <td>
+                        {% if not es_admin_principal %}
                             {% if u.whitelist %}
-                                <span class="badge ok">Autorizado ✔</span>
+                                <a href="{{ url_for('desautorizar_usuario', id_usuario=u.id) }}" class="btn rojo small">
+                                    Quitar autorización
+                                </a>
                             {% else %}
-                                <span class="badge no">No autorizado</span>
+                                <a href="{{ url_for('autorizar_usuario', id_usuario=u.id) }}" class="btn verde small">
+                                    Autorizar
+                                </a>
                             {% endif %}
-                        </td>
+                        {% endif %}
 
-                        <!-- ACCIONES -->
-                        <td class="acciones-td">
+                        <!-- CAMBIO DE ROL (POST) -->
+                        {% if not es_admin_principal %}
 
-                            <!-- AUTORIZAR / DESAUTORIZAR -->
-                            {% if u.whitelist %}
-                                <a href="{{ url_for('desautorizar_usuario', user_id=u.id) }}"
-                                   class="btn rojo small">Quitar autorización</a>
-                            {% else %}
-                                <a href="{{ url_for('autorizar_usuario', user_id=u.id) }}"
-                                   class="btn verde small">Autorizar</a>
-                            {% endif %}
+                            <form action="{{ url_for('cambiar_rol', id_usuario=u.id) }}" method="POST" style="display:inline;">
+                                <input type="hidden" name="rol" value="admin">
+                                <button class="btn azul small" {% if u.rol == 'admin' %}disabled{% endif %}>Hacer Admin</button>
+                            </form>
 
-                            <!-- CAMBIAR ROL -->
-                            {% if u.rol != "admin" %}
-                                <a href="{{ url_for('cambiar_rol', id_usuario=u.id, rol='admin') }}"
-                                   class="btn azul small">Hacer Admin</a>
-                            {% endif %}
+                            <form action="{{ url_for('cambiar_rol', id_usuario=u.id) }}" method="POST" style="display:inline;">
+                                <input type="hidden" name="rol" value="trabajador">
+                                <button class="btn amarillo small" {% if u.rol == 'trabajador' %}disabled{% endif %}>Hacer Trabajador</button>
+                            </form>
 
-                            {% if u.rol != "trabajador" %}
-                                <a href="{{ url_for('cambiar_rol', id_usuario=u.id, rol='trabajador') }}"
-                                   class="btn amarillo small">Hacer Trabajador</a>
-                            {% endif %}
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+                            <form action="{{ url_for('cambiar_rol', id_usuario=u.id) }}" method="POST" style="display:inline;">
+                                <input type="hidden" name="rol" value="usuario">
+                                <button class="btn gris small" {% if u.rol == 'usuario' %}disabled{% endif %}>Hacer Usuario</button>
+                            </form>
 
-        </div>
-    </section>
+                        {% else %}
+                            <span class="badge admin">Admin protegido</span>
+                        {% endif %}
+
+                        <!-- ELIMINAR (POST) -->
+                        {% if not es_admin_principal %}
+                            <form action="{{ url_for('eliminar_usuario', id_usuario=u.id) }}" 
+                                  method="POST" style="display:inline;"
+                                  onsubmit="return confirm('¿Seguro que quieres eliminar este usuario?');">
+                                <button class="btn rojo small">Eliminar</button>
+                            </form>
+                        {% endif %}
+
+                    </td>
+                </tr>
+
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+</section>
 </main>
 
 <footer class="main-footer">

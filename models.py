@@ -10,7 +10,7 @@ class User(db.Model, UserMixin):
     nombre = db.Column(db.String(100), nullable=False)
     correo = db.Column(db.String(150), unique=True, nullable=False)
     password_hash = db.Column(db.String(200), nullable=False)
-    rol = db.Column(db.String(20), default="trabajador")
+    rol = db.Column(db.String(20), default="usuario")
 
     # RELACIÓN UNO A UNO CON WHITELIST
     whitelist = db.relationship("Whitelist", backref="usuario", uselist=False)
