@@ -1,0 +1,72 @@
+/* ================================
+   PANEL TRABAJADOR - OliSport
+================================ */
+
+.worker-container {
+  max-width: 900px;
+  margin: 120px auto;
+  padding: 20px;
+  text-align: center;
+  color: var(--secondary-color);
+}
+
+.worker-header {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.worker-header h2 {
+  font-size: 28px;
+  margin-bottom: 8px;
+  color: var(--primary-color);
+}
+
+.worker-header p {
+  margin-bottom: 15px;
+  font-size: 18px;
+}
+
+.logout-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background: transparent;
+  color: var(--secondary-color);
+  border: 2px solid var(--primary-color);
+  border-radius: 10px;
+  font-size: 16px;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.logout-btn:hover {
+  background: var(--primary-color);
+  color: var(--main-color);
+}
+
+/* MARKET BOX */
+.market-box {
+  margin-top: 40px;
+  padding: 40px;
+  background: rgba(0, 229, 255, 0.05);
+  border-radius: 16px;
+  border: 1px solid rgba(0, 229, 255, 0.2);
+}
+
+.market-title {
+  font-size: 32px;
+  margin-bottom: 15px;
+  color: var(--primary-color);
+}
+
+.market-msg {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.market-sub {
+  font-size: 18px;
+  opacity: 0.8;
+}

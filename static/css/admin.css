@@ -1,0 +1,120 @@
+/* ============================ */
+/*         TABLA MODERNA        */
+/* ============================ */
+
+.table-wrapper {
+    width: 95%;
+    margin: 40px auto;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    background: #ffffff;
+}
+
+.tabla-usuarios {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Raleway', sans-serif;
+}
+
+.tabla-usuarios thead {
+    background: #0a0f36; /* azul oscuro tipo OliSport */
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.tabla-usuarios th, 
+.tabla-usuarios td {
+    padding: 14px 16px;
+    text-align: center;
+}
+
+.tabla-usuarios tbody tr:nth-child(even) {
+    background: #f0f4ff;
+}
+
+.tabla-usuarios tbody tr:nth-child(odd) {
+    background: #ffffff;
+}
+
+.tabla-usuarios tbody tr:hover {
+    background: #d8e2ff;
+    transition: 0.2s;
+}
+
+/* ============================ */
+/*          BADGES              */
+/* ============================ */
+
+.badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    display: inline-block;
+}
+
+.badge.admin {
+    background: #007bff;
+    color: white;
+}
+
+.badge.trabajador {
+    background: #6c757d;
+    color: white;
+}
+
+.badge.ok {
+    background: #28a745;
+    color: white;
+}
+
+.badge.no {
+    background: #dc3545;
+    color: white;
+}
+
+/* ============================ */
+/*         BOTONES              */
+/* ============================ */
+
+.btn {
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-weight: 600;
+    color: white;
+    text-decoration: none;
+    display: inline-block;
+    margin: 3px;
+}
+
+.btn.small {
+    font-size: 12px;
+}
+
+.btn.verde {
+    background: #28a745;
+}
+
+.btn.azul {
+    background: #007bff;
+}
+
+.btn.amarillo {
+    background: #ffb400;
+    color: #222;
+}
+
+.btn:hover {
+    filter: brightness(1.15);
+    transform: scale(1.02);
+    transition: 0.15s ease;
+}
+
+/* Fuerza color oscuro en la tabla del panel admin */
+.tabla-usuarios th,
+.tabla-usuarios td,
+.tabla-usuarios tr {
+    color: #000000 !important; /* Texto negro visible */
+}

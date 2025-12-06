@@ -1,0 +1,11 @@
+Creación de paneles y sistema de roles
+
+- Se crearon los archivos panel_admin.html y panel_trabajador.html
+- Se agregaron estilos CSS dedicados para cada panel
+- Configuración de nuevas rutas y lógica en app.py
+- Implementada gestión de whitelist (autorizar/desautorizar usuarios)
+- Implementada asignación y cambio de roles (admin/trabajador/usuario)
+- El administrador puede ver todos los usuarios, whitelist y accesos
+- El trabajador solo accede a su panel, info básica y mercado
+- El usuario ocasional accede únicamente a info básica y mercado
+- Pruebas realizadas para validar flujos de permisos por rol

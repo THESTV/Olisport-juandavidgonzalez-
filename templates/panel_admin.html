@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Panel Admin | OliSport" />
+
+    <!-- Fuentes y estilos -->
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style-responsive.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}" />
+
+    <title>Panel de Administración | OliSport</title>
+
+    <style>
+        .nav-links-left {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .nav-links-right {
+            margin-left: auto;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .navbar ul {
+            display: flex;
+            list-style: none;
+        }
+
+        .navbar a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <nav class="navbar">
+        <div class="nav-container">
+
+            <!-- LOGO -->
+            <div class="logo">
+                <a href="{{ url_for('index') }}">
+                    <img src="{{ url_for('static', filename='img/portfolio/logo-olisport.PNG') }}" alt="logo">
+                </a>
+            </div>
+
+            <!-- MENU IZQUIERDO -->
+            <ul class="nav-links-left">
+                <li><a href="{{ url_for('index') }}">Inicio</a></li>
+
+                {% if current_user.is_authenticated %}
+                    <li><a href="{{ url_for('panel_trabajador') }}">Trabajador</a></li>
+                    <li><a href="{{ url_for('panel_admin') }}" class="current">Administración</a></li>
+                {% endif %}
+            </ul>
+
+            <!-- MENU DERECHA -->
+            <ul class="nav-links-right">
+                {% if current_user.is_authenticated %}
+                    <li><a href="{{ url_for('perfil') }}">Mi Perfil</a></li>
+                    <li><a href="{{ url_for('logout') }}">Cerrar sesión</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('login') }}">Iniciar sesión</a></li>
+                    <li><a href="{{ url_for('register') }}">Registrarse</a></li>
+                {% endif %}
+            </ul>
+
+            <div class="hamburger" id="hamburger">☰</div>
+
+            <div class="hamburger-menu" id="hamburgerMenu">
+                <a href="{{ url_for('about') }}">Quiénes somos</a>
+                <a href="{{ url_for('servicio') }}">Servicios</a>
+                <a href="{{ url_for('contact') }}">Contáctanos</a>
+            </div>
+
+            <hr />
+        </div>
+    </nav>
+</header>
+
+<main>
+    <section class="banner-header-p1-index">
+        <div class="banner-header">
+            <div class="banner-header-text">
+                <h1 class="banner-title-index">Panel de <span>Administración</span></h1>
+
+                <div class="text-description-index">
+                    <hr />
+                    <p>
+                        Bienvenido <strong>{{ usuario.nombre }}</strong>.  
+                        Aquí puedes gestionar usuarios, roles y whitelist.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section Catalogo">
+        <div class="container-catalogo">
+            <h3 class="title">USUARIOS REGISTRADOS</h3>
+        </div>
+    </section>
+
+    <!-- TARJETA ADMIN -->
+    <section>
+        <div class="admin-card">
+
+            <table class="tabla-usuarios">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Correo</th>
+                        <th>Rol</th>
+                        <th>Whitelist</th>
+                        <th class="acciones-th">Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                {% for u in usuarios %}
+                    <tr>
+                        <td>{{ u.id }}</td>
+                        <td>{{ u.nombre }}</td>
+                        <td>{{ u.correo }}</td>
+
+                        <!-- ROL -->
+                        <td>
+                            {% if u.rol == "admin" %}
+                                <span class="badge admin">Admin</span>
+                            {% else %}
+                                <span class="badge trabajador">Trabajador</span>
+                            {% endif %}
+                        </td>
+
+                        <!-- WHITELIST -->
+                        <td>
+                            {% if u.whitelist %}
+                                <span class="badge ok">Autorizado ✔</span>
+                            {% else %}
+                                <span class="badge no">No autorizado</span>
+                            {% endif %}
+                        </td>
+
+                        <!-- ACCIONES -->
+                        <td class="acciones-td">
+
+                            <!-- AUTORIZAR / DESAUTORIZAR -->
+                            {% if u.whitelist %}
+                                <a href="{{ url_for('desautorizar_usuario', user_id=u.id) }}"
+                                   class="btn rojo small">Quitar autorización</a>
+                            {% else %}
+                                <a href="{{ url_for('autorizar_usuario', user_id=u.id) }}"
+                                   class="btn verde small">Autorizar</a>
+                            {% endif %}
+
+                            <!-- CAMBIAR ROL -->
+                            {% if u.rol != "admin" %}
+                                <a href="{{ url_for('cambiar_rol', id_usuario=u.id, rol='admin') }}"
+                                   class="btn azul small">Hacer Admin</a>
+                            {% endif %}
+
+                            {% if u.rol != "trabajador" %}
+                                <a href="{{ url_for('cambiar_rol', id_usuario=u.id, rol='trabajador') }}"
+                                   class="btn amarillo small">Hacer Trabajador</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    </section>
+</main>
+
+<footer class="main-footer">
+    <p>&copy; 2025 OliSport — Todos los derechos reservados.</p>
+    <div class="container">
+        <p class="small">Panel de Administración</p>
+        <ul>
+            <li><a href="#"><i class="fab fa-facebook"></i></a></li>
+            <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+            <li><a href="#"><i class="fab fa-youtube"></i></a></li>
+        </ul>
+    </div>
+</footer>
+
+<script>
+    document.getElementById("hamburger").addEventListener("click", function () {
+        const menu = document.getElementById("hamburgerMenu");
+        menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+    });
+</script>
+
+</body>
+</html>
