@@ -21,33 +21,68 @@
     <nav class="navbar">
         <div class="nav-container">
 
-            <div class="logo">
-                <a href="{{ url_for('index') }}">
+            <!-- LOGO + ICONO CERRAR SESIÓN (IGUAL AL INDEX) -->
+            <div class="logo-area">
+                <a href="{{ url_for('index') }}" class="logo">
                     <img src="{{ url_for('static', filename='img/portfolio/logo-olisport.PNG') }}" alt="logo">
                 </a>
+
+                <div class="auth-icons">
+                    {% if current_user.is_authenticated %}
+                        <!-- CERRAR SESIÓN -->
+                        <a href="{{ url_for('logout') }}" class="icon-btn" title="Cerrar sesión">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('login') }}" class="icon-btn">
+                            <i class="fas fa-user"></i>
+                        </a>
+                    {% endif %}
+                </div>
             </div>
 
-            <ul class="nav-links-left">
+            <!-- MENÚ PRINCIPAL -->
+            <ul class="nav-links">
+
                 <li><a href="{{ url_for('index') }}">Inicio</a></li>
 
-                {% if current_user.is_authenticated %}
-                    <li><a href="{{ url_for('panel_trabajador') }}">P. Trabajador</a></li>
-                    <li><a href="{{ url_for('panel_admin') }}" class="current">P. Administración</a></li>
-                {% endif %}
-            </ul>
+                <!-- MARKET -->
+                <li><a href="{{ url_for('market') }}">Market</a></li>
 
-            <ul class="nav-links-right">
+                <!-- MI PERFIL (como estaba) -->
                 {% if current_user.is_authenticated %}
                     <li><a href="{{ url_for('perfil') }}">Mi Perfil</a></li>
-                    <li><a href="{{ url_for('logout') }}">Cerrar sesión</a></li>
-                {% else %}
-                    <li><a href="{{ url_for('login') }}">Iniciar sesión</a></li>
-                    <li><a href="{{ url_for('register') }}">Registrarse</a></li>
+                {% endif %}
+
+                <!-- PANELES -->
+                {% if current_user.is_authenticated %}
+                    {% if current_user.rol == 'trabajador' %}
+                           <li>
+              <a href="{{ url_for('panel_trabajador') }}">
+                <i class="fas fa-tools"></i> 
+              </a>
+            </li>
+                    {% endif %}
+
+                    {% if current_user.rol == 'admin' %}
+                         <li>
+              <a href="{{ url_for('panel_trabajador') }}">
+                <i class="fas fa-tools"></i> 
+              </a>
+            </li>
+                          <li>
+              <a href="{{ url_for('panel_admin') }}"class="current">
+                <i class="fas fa-crown"></i>
+              </a>
+            </li>
+                    {% endif %}
                 {% endif %}
             </ul>
 
+            <!-- HAMBURGUESA -->
             <div class="hamburger" id="hamburger">☰</div>
 
+            <!-- MENÚ DESPLEGABLE -->
             <div class="hamburger-menu" id="hamburgerMenu">
                 <a href="{{ url_for('about') }}">Quiénes somos</a>
                 <a href="{{ url_for('servicio') }}">Servicios</a>
@@ -58,6 +93,8 @@
         </div>
     </nav>
 </header>
+
+<!-- ========================= CONTENIDO PANEL ========================= -->
 
 <main>
 
@@ -77,13 +114,11 @@
     </div>
 </section>
 
-
 <section class="section Catalogo">
     <div class="container-catalogo">
         <h3 class="title">USUARIOS REGISTRADOS</h3>
     </div>
 </section>
-
 
 <section>
     <div class="admin-card">
@@ -129,8 +164,6 @@
 
                     <td class="acciones-td">
 
-
-                        <!-- WHITELIST -->
                         {% if not es_admin_principal %}
                             {% if u.whitelist %}
                                 <a href="{{ url_for('desautorizar_usuario', id_usuario=u.id) }}" class="btn rojo small">
@@ -143,7 +176,6 @@
                             {% endif %}
                         {% endif %}
 
-                        <!-- CAMBIO DE ROL (POST) -->
                         {% if not es_admin_principal %}
 
                             <form action="{{ url_for('cambiar_rol', id_usuario=u.id) }}" method="POST" style="display:inline;">
@@ -165,9 +197,8 @@
                             <span class="badge admin">Admin protegido</span>
                         {% endif %}
 
-                        <!-- ELIMINAR (POST) -->
                         {% if not es_admin_principal %}
-                            <form action="{{ url_for('eliminar_usuario', id_usuario=u.id) }}" 
+                            <form action="{{ url_for('eliminar_usuario', id_usuario=u.id) }}"
                                   method="POST" style="display:inline;"
                                   onsubmit="return confirm('¿Seguro que quieres eliminar este usuario?');">
                                 <button class="btn rojo small">Eliminar</button>

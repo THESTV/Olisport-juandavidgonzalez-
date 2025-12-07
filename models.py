@@ -12,13 +12,23 @@ class User(db.Model, UserMixin):
     password_hash = db.Column(db.String(200), nullable=False)
     rol = db.Column(db.String(20), default="usuario")
 
-    # RELACIÓN UNO A UNO CON WHITELIST
-    whitelist = db.relationship("Whitelist", backref="usuario", uselist=False)
+    # Relación UNO A UNO con Whitelist
+    whitelist = db.relationship(
+        "Whitelist",
+        backref="usuario",
+        uselist=False,
+        cascade="all, delete-orphan"
+    )
 
 
 class Whitelist(db.Model):
     __tablename__ = "whitelist"
 
     id = db.Column(db.Integer, primary_key=True)
-    id_usuario = db.Column(db.Integer, db.ForeignKey("usuarios.id"), nullable=False)
+    id_usuario = db.Column(
+        db.Integer,
+        db.ForeignKey("usuarios.id"),
+        nullable=False,
+        unique=True   # asegura la relación uno a uno en la base de datos
+    )
     fecha_autorizacion = db.Column(db.String(50), nullable=True)

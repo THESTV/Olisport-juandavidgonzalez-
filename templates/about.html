@@ -55,12 +55,34 @@
         </div>
       </div>
 
-      <!-- MENÚ PRINCIPAL (YA NO OCULTO) -->
+      <!-- MENÚ PRINCIPAL -->
       <ul class="nav-links">
-        <li><a href="{{ url_for('index') }}">Inicio</a></li>
+        <li><a href="{{ url_for('index') }}" >Inicio</a></li>
         <li><a href="{{ url_for('about') }}"class="current">Quiénes somos</a></li>
         <li><a href="{{ url_for('servicio') }}">Servicios</a></li>
         <li><a href="{{ url_for('contact') }}">Contáctanos</a></li>
+
+        {% if current_user.is_authenticated %}
+
+          <!-- TRABAJADOR o ADMIN -->
+          {% if current_user.rol == 'trabajador' or current_user.rol == 'admin' %}
+            <li>
+              <a href="{{ url_for('panel_trabajador') }}">
+                <i class="fas fa-tools"></i> 
+              </a>
+            </li>
+          {% endif %}
+
+          <!-- SOLO ADMIN -->
+          {% if current_user.rol == 'admin' %}
+            <li>
+              <a href="{{ url_for('panel_admin') }}">
+                <i class="fas fa-crown"></i>
+              </a>
+            </li>
+          {% endif %}
+
+        {% endif %}
       </ul>
 
       <hr />

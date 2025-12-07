@@ -16,47 +16,79 @@
 <header>
     <nav class="navbar">
         <div class="nav-container">
-            <!-- LOGO -->
-            <div class="logo">
-                <a href="{{ url_for('index') }}">
+
+            <!-- LOGO + ICONO CERRAR SESIÓN (IGUAL AL INDEX) -->
+            <div class="logo-area">
+                <a href="{{ url_for('index') }}" class="logo">
                     <img src="{{ url_for('static', filename='img/portfolio/logo-olisport.PNG') }}" alt="logo">
                 </a>
+
+                <div class="auth-icons">
+                    {% if current_user.is_authenticated %}
+                        <!-- CERRAR SESIÓN -->
+                        <a href="{{ url_for('logout') }}" class="icon-btn" title="Cerrar sesión">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('login') }}" class="icon-btn">
+                            <i class="fas fa-user"></i>
+                        </a>
+                    {% endif %}
+                </div>
             </div>
 
-            <!-- LINKS VISIBLES -->
+            <!-- MENÚ PRINCIPAL -->
             <ul class="nav-links">
+
                 <li><a href="{{ url_for('index') }}">Inicio</a></li>
 
-                {% if current_user.is_authenticated %}
-                    <!-- NUEVO: MARKET -->
-                    <li><a href="{{ url_for('market') }}">Market</a></li>
+                <!-- MARKET -->
+                <li><a href="{{ url_for('market') }}">Market</a></li>
 
-                    <li><a href="{{ url_for('perfil') }}" class="current">Mi Perfil</a></li>
-                    <li><a href="{{ url_for('logout') }}">Cerrar sesión</a></li>
-                {% else %}
-                    <li><a href="{{ url_for('login') }}">Iniciar sesión</a></li>
-                    <li><a href="{{ url_for('register') }}">Registrarse</a></li>
+                <!-- MI PERFIL (como estaba) -->
+                {% if current_user.is_authenticated %}
+                    <li><a href="{{ url_for('perfil') }}"class="current">Mi Perfil</a></li>
+                {% endif %}
+
+                <!-- PANELES -->
+                {% if current_user.is_authenticated %}
+                    {% if current_user.rol == 'trabajador' %}
+                           <li>
+              <a href="{{ url_for('panel_trabajador') }}">
+                <i class="fas fa-tools"></i> 
+              </a>
+            </li>
+                    {% endif %}
+
+                    {% if current_user.rol == 'admin' %}
+                         <li>
+              <a href="{{ url_for('panel_trabajador') }}">
+                <i class="fas fa-tools"></i> 
+              </a>
+            </li>
+                          <li>
+              <a href="{{ url_for('panel_admin') }}">
+                <i class="fas fa-crown"></i>
+              </a>
+            </li>
+                    {% endif %}
                 {% endif %}
             </ul>
 
             <!-- HAMBURGUESA -->
             <div class="hamburger" id="hamburger">☰</div>
 
-            <!-- MENÚ DESPLEGABLE (SECUNDARIO) -->
+            <!-- MENÚ DESPLEGABLE -->
             <div class="hamburger-menu" id="hamburgerMenu">
                 <a href="{{ url_for('about') }}">Quiénes somos</a>
                 <a href="{{ url_for('servicio') }}">Servicios</a>
                 <a href="{{ url_for('contact') }}">Contáctanos</a>
-
-                {% if current_user.is_authenticated %}
-
-                {% endif %}
             </div>
+
+            <hr />
         </div>
-        <hr/>
     </nav>
 </header>
-
 
 <!-- MENSAJES FLASH -->
 <div class="flash-container">
@@ -83,7 +115,7 @@
 
         <hr class="divider">
 
-        <!-- FORMULARIO TODO EN UNO -->
+        <!-- FORMULARIO -->
         <form method="POST" class="perfil-form">
 
             <h3>Información Personal</h3>

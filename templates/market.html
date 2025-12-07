@@ -4,88 +4,111 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- ICONOS -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" crossorigin="anonymous">
+
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <title>OliSport Market</title>
 </head>
+
 <body>
 
-    <!-- ===================== NAVBAR ===================== -->
+<!-- ===================== NAVBAR ===================== -->
 <header>
-    <nav class="navbar">
-        <div class="nav-container">
-            <!-- LOGO -->
-            <div class="logo">
-                <a href="{{ url_for('index') }}">
-                    <img src="{{ url_for('static', filename='img/portfolio/logo-olisport.PNG') }}" alt="logo">
-                </a>
-            </div>
+  <nav class="navbar">
+    <div class="nav-container">
 
-            <!-- LINKS VISIBLES -->
-            <ul class="nav-links">
-                <li><a href="{{ url_for('index') }}">Inicio</a></li>
+      <!-- LOGO SOLO -->
+      <div class="logo-area">
+        <a href="{{ url_for('index') }}" class="logo">
+          <img src="{{ url_for('static', filename='img/portfolio/logo-olisport.PNG') }}" alt="logo">
+        </a>
 
-                {% if current_user.is_authenticated %}
-                    <!-- NUEVO: MARKET -->
-                    <li><a href="{{ url_for('market') }}"class="current">Market</a></li>
+        <!-- SOLO CERRAR SESIÓN (SIN PERFIL) -->
+        {% if current_user.is_authenticated %}
+          <a href="{{ url_for('logout') }}" class="icon-btn" title="Cerrar sesión">
+            <i class="fas fa-sign-out-alt"></i>
+          </a>
+        {% endif %}
+      </div>
 
-                    <li><a href="{{ url_for('perfil') }}">Mi Perfil</a></li>
-                    <li><a href="{{ url_for('logout') }}">Cerrar sesión</a></li>
-                {% else %}
-                    <li><a href="{{ url_for('login') }}">Iniciar sesión</a></li>
-                    <li><a href="{{ url_for('register') }}">Registrarse</a></li>
-                {% endif %}
-            </ul>
+      <!-- MENÚ PRINCIPAL -->
+      <ul class="nav-links">
 
-            <!-- HAMBURGUESA -->
-            <div class="hamburger" id="hamburger">☰</div>
+        <li><a href="{{ url_for('index') }}">Inicio</a></li>
 
-            <!-- MENÚ DESPLEGABLE (SECUNDARIO) -->
-            <div class="hamburger-menu" id="hamburgerMenu">
-                <a href="{{ url_for('about') }}">Quiénes somos</a>
-                <a href="{{ url_for('servicio') }}">Servicios</a>
-                <a href="{{ url_for('contact') }}">Contáctanos</a>
+        <li><a href="{{ url_for('market') }}" class="current">Market</a></li>
 
-                {% if current_user.is_authenticated %}
+        {% if current_user.is_authenticated %}
+        <li><a href="{{ url_for('perfil') }}">Mi Perfil</a></li>
+        {% endif %}
 
-                {% endif %}
-            </div>
-        </div>
-        <hr/>
-    </nav>
+        {% if current_user.is_authenticated and current_user.rol in ['trabajador', 'admin'] %}
+          <li>
+            <a href="{{ url_for('panel_trabajador') }}" title="Panel trabajador">
+              <i class="fas fa-tools"></i>
+            </a>
+          </li>
+        {% endif %}
+
+        {% if current_user.rol == 'admin' %}
+          <li>
+            <a href="{{ url_for('panel_admin') }}" title="Panel administrador">
+              <i class="fas fa-crown"></i>
+            </a>
+          </li>
+        {% endif %}
+
+      </ul>
+
+      <!-- HAMBURGUESA -->
+      <div class="hamburger" id="hamburger">☰</div>
+
+      <!-- MENÚ DESPLEGABLE -->
+      <div class="hamburger-menu" id="hamburgerMenu">
+          <a href="{{ url_for('about') }}">Quiénes somos</a>
+          <a href="{{ url_for('servicio') }}">Servicios</a>
+          <a href="{{ url_for('contact') }}">Contáctanos</a>
+      </div>
+
+      <hr />
+    </div>
+  </nav>
 </header>
 
-    <!-- ===================== MARKET CONTENT ===================== -->
-    <main>
-        <section class="market-section">
-            <div class="market-box">
-                <h1 class="market-title">OliSport Market</h1>
-                <p class="market-msg">🚧 Estamos trabajando en ello…</p>
-                <p class="market-sub">Muy pronto podrás ver productos aquí 🛒</p>
-            </div>
-        </section>
-    </main>
 
-    <!-- ===================== FOOTER ===================== -->
-    <footer class="main-footer">
-        <p>&copy; 2025 OliSport — Todos los derechos reservados.</p>
-        <div class="container">
-            <p class="small">Catálogo 2025</p>
-            <ul>
-                <li><a href="#"><i class="fab fa-facebook"></i></a></li>
-                <li><a href="#"><i class="fab fa-instagram"></i></a></li>
-                <li><a href="#"><i class="fab fa-youtube"></i></a></li>
-            </ul>
-        </div>
-    </footer>
+<!-- ===================== MARKET CONTENT ===================== -->
+<main>
+  <section class="market-section">
+    <div class="market-box">
+      <h1 class="market-title">OliSport Market</h1>
+      <p class="market-msg">🚧 Estamos trabajando en ello…</p>
+      <p class="market-sub">Muy pronto podrás ver productos aquí 🛒</p>
+    </div>
+  </section>
+</main>
 
-    <!-- ===================== JS MENÚ HAMBURGUESA ===================== -->
+<!-- ===================== FOOTER ===================== -->
+<footer class="main-footer">
+    <p>&copy; 2025 OliSport — Todos los derechos reservados.</p>
+    <div class="container">
+        <p class="small">Catálogo 2025</p>
+        <ul>
+            <li><a href="#"><i class="fab fa-facebook"></i></a></li>
+            <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+            <li><a href="#"><i class="fab fa-youtube"></i></a></li>
+        </ul>
+    </div>
+</footer>
+
+<!-- ===================== JS MENÚ HAMBURGUESA ===================== -->
 <script>
     document.getElementById("hamburger").addEventListener("click", function () {
         const menu = document.getElementById("hamburgerMenu");
         menu.style.display = menu.style.display === "flex" ? "none" : "flex";
     });
 </script>
-
 
 </body>
 </html>

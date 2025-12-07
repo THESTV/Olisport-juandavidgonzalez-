@@ -21,33 +21,69 @@
 <header>
     <nav class="navbar">
         <div class="nav-container">
-            <!-- LOGO -->
-            <div class="logo">
-                <a href="{{ url_for('index') }}">
+
+            <!-- LOGO + ICONO CERRAR SESIÓN (IGUAL AL INDEX) -->
+            <div class="logo-area">
+                <a href="{{ url_for('index') }}" class="logo">
                     <img src="{{ url_for('static', filename='img/portfolio/logo-olisport.PNG') }}" alt="logo">
                 </a>
+
+                <div class="auth-icons">
+                    {% if current_user.is_authenticated %}
+                        <!-- CERRAR SESIÓN -->
+                        <a href="{{ url_for('logout') }}" class="icon-btn" title="Cerrar sesión">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('login') }}" class="icon-btn">
+                            <i class="fas fa-user"></i>
+                        </a>
+                    {% endif %}
+                </div>
             </div>
 
-            <!-- LINKS VISIBLES -->
+            <!-- MENÚ PRINCIPAL -->
             <ul class="nav-links">
+
                 <li><a href="{{ url_for('index') }}">Inicio</a></li>
 
+                <!-- MARKET -->
+                <li><a href="{{ url_for('market') }}">Market</a></li>
+
+                <!-- MI PERFIL (como estaba) -->
                 {% if current_user.is_authenticated %}
-                    <!-- NUEVO: MARKET -->
-                    <li><a href="{{ url_for('panel_trabajador') }}" class="current">Panel</a></li>
                     <li><a href="{{ url_for('perfil') }}">Mi Perfil</a></li>
-                    <li><a href="{{ url_for('logout') }}">Cerrar sesión</a></li>
-                {% else %}
-                    <li><a href="{{ url_for('login') }}">Iniciar sesión</a></li>
-                    <li><a href="{{ url_for('register') }}">Registrarse</a></li>
+                {% endif %}
+
+                <!-- PANELES -->
+                {% if current_user.is_authenticated %}
+                    {% if current_user.rol == 'trabajador' %}
+                           <li>
+              <a href="{{ url_for('panel_trabajador') }}"class="current">
+                <i class="fas fa-tools"></i> 
+              </a>
+            </li>
+                    {% endif %}
+
+                    {% if current_user.rol == 'admin' %}
+                         <li>
+              <a href="{{ url_for('panel_trabajador') }}"class="current">
+                <i class="fas fa-tools"></i> 
+              </a>
+            </li>
+                          <li>
+              <a href="{{ url_for('panel_admin') }}">
+                <i class="fas fa-crown"></i>
+              </a>
+            </li>
+                    {% endif %}
                 {% endif %}
             </ul>
 
             <!-- HAMBURGUESA -->
             <div class="hamburger" id="hamburger">☰</div>
 
-
-            <!-- MENÚ HAMBURGUESA -->
+            <!-- MENÚ DESPLEGABLE -->
             <div class="hamburger-menu" id="hamburgerMenu">
                 <a href="{{ url_for('about') }}">Quiénes somos</a>
                 <a href="{{ url_for('servicio') }}">Servicios</a>
@@ -88,31 +124,44 @@
     </section>
 
     <section>
-        <div class="card-projects">
+    <div class="card-projects">
 
-            <article class="card">
-                <a href="#">
-                    <img src="{{ url_for('static', filename='img/portfolio/istockphoto-1272854630-612x612.jpg') }}" />
-                    <h3 style="color:white;">Inventario</h3>
-                </a>
-            </article>
+        <!-- INVENTARIO -->
+        <article class="card">
+            <a href="#">
+                <img class="card-top-img" 
+                     src="{{ url_for('static', filename='img/portfolio/inventario.jpg') }}" 
+                     alt="Inventario">
 
-            <article class="card">
-                <a href="#">
-                    <img src="{{ url_for('static', filename='img/portfolio/woman-shoe-icon-simple-style-woman-shoe-big-sale-poster-background.jpg') }}" />
-                    <h3 style="color:white;">Pedidos</h3>
-                </a>
-            </article>
+                <h3 style="color:white;">Inventario</h3>
+            </a>
+        </article>
 
-            <article class="card">
-                <a href="#">
-                    <img src="{{ url_for('static', filename='img/portfolio/kids-shoes-silhouette.jpg') }}" />
-                    <h3 style="color:white;">Reportes</h3>
-                </a>
-            </article>
+        <!-- PEDIDOS -->
+        <article class="card">
+            <a href="#">
+                <img class="card-top-img" 
+                     src="{{ url_for('static', filename='img/portfolio/pedido.jpg') }}" 
+                     alt="Pedidos">
 
-        </div>
-    </section>
+                <h3 style="color:white;">Pedidos</h3>
+            </a>
+        </article>
+
+        <!-- REPORTES -->
+        <article class="card">
+            <a href="#">
+                <img class="card-top-img" 
+                     src="{{ url_for('static', filename='img/portfolio/reportes.jpg') }}" 
+                     alt="Reportes">
+
+                <h3 style="color:white;">Reportes</h3>
+            </a>
+        </article>
+
+    </div>
+</section>
+
 </main>
 
 
