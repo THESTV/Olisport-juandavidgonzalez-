@@ -1,8 +1,65 @@
+/* ============================================================
+   PANEL ADMIN — ESTILO COMPLETO Y OPTIMIZADO
+   ============================================================ */
 /* ============================ */
 /*     ESTILOS PANEL ADMIN      */
 /* ============================ */
+/* -----------------------------
+   FORZAR HAMBURGUESA POR ENCIMA
+   ----------------------------- */
+
+/* Asegúrate de que el header no esté por encima */
+header,
+header .navbar,
+header .nav-container {
+    position: relative;   /* necesario para controlar z-index */
+    z-index: 1000;        /* valor bajo para que no cubra la hamburguesa */
+}
+
+/* Botón hamburguesa: siempre encima */
+.hamburger {
+    position: block;      /* fija en la ventana para que no se mueva */
+    top: 18px;            /* ajusta según necesites */
+    right: 20px;          /* o left: 20px si lo quieres a la izquierda */
+    z-index: 99999 !important;  /* muchísimo más alto que el header */
+    background: rgba(0,0,0,0.35);/* opcional: fondo semi-transparente para visibilidad */
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+}
+
+/* Aumenta el área clicable (útil en pantallas táctiles) */
+.hamburger::after {
+    content: "";
+    position: absolute;
+}
+
+/* Asegura que el menú desplegable también esté encima */
+.hamburger-menu {
+    position:initial;       /* lo fijamos para que quede encima del header */
+    z-index: 99990 !important;
+    display: none;         /* tu JS controla mostrar/ocultar */
+    flex-direction: column;
+    gap: 8px;
+    background: rgba(0,0,0,0.85);
+    padding: 12px;
+    border-radius: 10px;
+}
+
+/* Mobile: despliegue visible */
+@media (max-width: 760px) {
+    .hamburger { top: 12px; right: 12px; }
+    .hamburger-menu { top: 52px; right: 12px; width: calc(100% - 24px); left: 12px; }
+}
 
 /* CONTENEDOR TABLA CON SOMBRA */
+
 .table-wrapper {
     width: 95%;
     margin: 40px auto;
@@ -155,4 +212,250 @@
 
 .banner-title-admin span {
     color: var(--primary-color);
+}
+
+/* ============================================================
+   CONTENEDORES PRINCIPALES
+   ============================================================ */
+.admin-card {
+    width: 95%;
+    margin: 0 auto 40px auto;
+    padding: 25px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.section-divider {
+    width: 90%;
+    margin: 60px auto 20px auto;
+    height: 3px;
+    background: linear-gradient(to right, #515abc, #00e5ff);
+    border-radius: 4px;
+}
+
+/* ============================================================
+   TABLA DE USUARIOS
+   ============================================================ */
+
+.tabla-usuarios {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 8px;
+    font-family: "Raleway", sans-serif;
+}
+
+.tabla-usuarios thead {
+    background: #30336b;
+    color: white;
+}
+
+.tabla-usuarios th {
+    padding: 16px;
+    font-size: 15px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.tabla-usuarios tbody tr {
+    background: #ffffff;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    border-radius: 14px;
+}
+
+.tabla-usuarios td {
+    padding: 14px 16px;
+    text-align: center;
+    color: #000;
+    font-size: 15px;
+}
+
+.tabla-usuarios tbody tr td:first-child { border-radius: 14px 0 0 14px; }
+.tabla-usuarios tbody tr td:last-child { border-radius: 0 14px 14px 0; }
+
+.tabla-usuarios tbody tr:hover {
+    background: #e8f0ff;
+    transform: scale(1.01);
+    transition: 0.15s ease;
+}
+
+/* ============================================================
+   BADGES
+   ============================================================ */
+.badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    display: inline-block;
+}
+
+.badge.admin { background: #007bff; color: white; }
+.badge.trabajador { background: #6c757d; color: white; }
+.badge.usuario { background: #17a2b8; color: white; }
+.badge.ok { background: #28a745; color: white; }
+.badge.no { background: #dc3545; color: white; }
+
+/* ============================================================
+   BOTONES
+   ============================================================ */
+.btn {
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-weight: 600;
+    color: white;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    border: none;
+    width: 140px;
+    text-align: center;
+    margin: 3px;
+}
+
+.btn.small { font-size: 13px; }
+
+.btn.verde { background: #28a745; }
+.btn.azul { background: #007bff; }
+.btn.amarillo { background: #ffb400; color: #222; }
+.btn.gris { background-color: #6c757d; }
+.btn.rojo { background: #dc3545; }
+
+.btn:hover {
+    filter: brightness(1.18);
+    transform: scale(1.05);
+    transition: 0.15s ease;
+}
+
+.acciones-td {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.acciones-th {
+    width: 200px;
+}
+
+/* ============================================================
+   FORMULARIO CREAR USUARIO
+   ============================================================ */
+
+.form-crear-modern {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+    margin-top: 10px;
+}
+
+.form-crear-modern .field {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Labels SOLO dentro del formulario de creación */
+.admin-card .form-crear-modern .field label {
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #ffffff;
+    font-size: 14px;
+}
+
+/* Inputs */
+.form-crear-modern input,
+.form-crear-modern select {
+    padding: 12px;
+    border-radius: 10px;
+    border: 2px solid #d0d0d0;
+    font-size: 15px;
+    transition: .15s ease;
+    color: #222;
+    background: #fff;
+}
+
+.form-crear-modern input:focus,
+.form-crear-modern select:focus {
+    border-color: #00e5ff;
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.4);
+    outline: none;
+}
+
+.btn-crear-modern {
+    grid-column: span 2;
+    padding: 14px;
+    font-size: 18px;
+    border-radius: 12px;
+    text-align: center;
+    margin-top: 10px;
+    font-weight: 700;
+}
+
+.btn-crear-modern i { margin-right: 6px; }
+
+@media (max-width: 760px) {
+    .form-crear-modern {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ============================================================
+   TITULOS DE SECCIÓN
+   ============================================================ */
+.container-catalogo .title {
+    font-size: 32px;
+    color: #ffffff !important;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 15px;
+    font-weight: 800;
+}
+
+/* ============================================================
+   MODALES
+   ============================================================ */
+.modal .modal-title {
+    color: #000 !important;
+    font-size: 20px !important;
+    font-weight: 700;
+}
+
+.modal .modal-body label,
+.modal .modal-content label,
+.modal .modal-dialog label {
+    color: #222 !important;
+    font-weight: 700;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.modal .modal-body .form-control {
+    color: #222;
+    background: #fff;
+    border-radius: 8px;
+}
+/* ======== FIX LABELS "CREAR NUEVO USUARIO" ======== */
+.form-crear-usuario label {
+    color: #222 !important;   /* texto oscuro para que se vea */
+    font-weight: 600;
+}
+/* ============================
+   FIX PARA FORMULARIO NUEVO USUARIO
+   ============================ */
+.form-crear-modern label {
+    color: #222 !important;   /* Texto oscuro visible en fondo claro */
+    font-weight: 600;
+}
+
+.form-crear-modern .field input,
+.form-crear-modern .field select {
+    color: #222;               /* Texto dentro de los inputs */
+    background: #fff;          /* Fondo claro */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.form-crear-modern .field input::placeholder,
+.form-crear-modern .field select::placeholder {
+    color: #666;               /* Placeholder visible */
 }
