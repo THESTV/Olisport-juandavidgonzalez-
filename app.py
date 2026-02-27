@@ -1,19 +1,18 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
-from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from flask import Flask, request, jsonify
+from flask_login import LoginManager, login_user, logout_user, current_user
 from werkzeug.security import generate_password_hash
 from models import db, User, Whitelist
-from datetime import datetime
 from config import Config
+from flask_cors import CORS
 
 app = Flask(__name__)
-
-# CONFIGURACIÓN
 app.config.from_object(Config)
 db.init_app(app)
 
-# LOGIN MANAGER
+# Permite peticiones desde Next.js (localhost:3000)
+CORS(app, origins=["http://localhost:3000"], supports_credentials=True)
+
 login_manager = LoginManager()
-login_manager.login_view = 'login'
 login_manager.init_app(app)
 
 @login_manager.user_loader
@@ -22,299 +21,162 @@ def load_user(user_id):
 
 
 # ======================================================
-# RUTAS BÁSICAS
+# AUTH — LOGIN (llamado por NextAuth)
 # ======================================================
-@app.route('/')
-def index():
-    return render_template("index.html")
+@app.route("/api/login", methods=["POST"])
+def api_login():
+    data = request.get_json()
+    correo = data.get("correo", "").strip().lower()
+    password = data.get("password", "")
 
-@app.route('/about')
-def about():
-    return render_template("about.html")
+    usuario = User.query.filter_by(correo=correo).first()
+    if not usuario:
+        return jsonify({"success": False, "error": "El correo no está registrado"}), 401
+    if not usuario.check_password(password):
+        return jsonify({"success": False, "error": "Contraseña incorrecta"}), 401
 
-@app.route('/contact')
-def contact():
-    return render_template("contact.html")
-
-@app.route('/servicio')
-def servicio():
-    return render_template("servicio.html")
-
-
-# ======================================================
-# REGISTRO
-# ======================================================
-@app.route("/register", methods=["GET", "POST"])
-def register():
-    if request.method == "POST":
-        nombre = request.form["nombre"].strip()
-        correo = request.form["correo"].strip().lower()
-        password = request.form["password"]
-        confirm = request.form["password2"]
-
-        if User.query.filter_by(correo=correo).first():
-            flash("El correo ya está registrado", "error")
-            return render_template("register.html")
-
-        if password != confirm:
-            flash("Las contraseñas no coinciden", "error")
-            return render_template("register.html")
-
-        nuevo = User(
-            nombre=nombre,
-            correo=correo,
-            contrasena_hash=generate_password_hash(password),
-            rol="usuario"
-        )
-        db.session.add(nuevo)
-        db.session.commit()
-
-        flash("Cuenta creada correctamente.", "success")
-        return redirect(url_for("login"))
-
-    return render_template("register.html")
+    return jsonify({
+        "success": True,
+        "user": {
+            "id": usuario.id,
+            "nombre": usuario.nombre,
+            "correo": usuario.correo,
+            "rol": usuario.rol,
+            "whitelist": usuario.whitelist,
+            "direccion": usuario.direccion or "",
+        }
+    })
 
 
 # ======================================================
-# LOGIN
+# AUTH — REGISTRO
 # ======================================================
-@app.route("/login", methods=["GET", "POST"])
-def login():
-    if request.method == "POST":
-        correo = request.form.get("correo", "").strip().lower()
-        password = request.form.get("password", "")
+@app.route("/api/register", methods=["POST"])
+def api_register():
+    data = request.get_json()
+    nombre = data.get("nombre", "").strip()
+    correo = data.get("correo", "").strip().lower()
+    password = data.get("password", "")
 
-        usuario = User.query.filter_by(correo=correo).first()
-
-        if not usuario:
-            flash("El correo no está registrado.", "error")
-            return render_template("login.html", correo=correo)
-
-        if not usuario.check_password(password):
-            flash("Contraseña incorrecta.", "error")
-            return render_template("login.html", correo=correo)
-
-        login_user(usuario)
-
-        if usuario.rol == "admin":
-            return redirect(url_for("panel_admin"))
-        elif usuario.rol == "trabajador":
-            if usuario.whitelist:
-                return redirect(url_for("panel_trabajador"))
-            else:
-                flash("No estás autorizado.", "error")
-                return redirect(url_for("market"))
-
-        return redirect(url_for("market"))
-
-    return render_template("login.html")
-
-
-# ======================================================
-# PERFIL
-# ======================================================
-@app.route("/perfil", methods=["GET", "POST"])
-@login_required
-def perfil():
-    if request.method == "POST":
-        usuario = current_user
-        usuario.nombre = request.form["nombre"]
-        usuario.correo = request.form["correo"]
-
-        nueva_pass = request.form.get("password")
-        if nueva_pass:
-            usuario.contrasena_hash = generate_password_hash(nueva_pass)
-
-        db.session.commit()
-        flash("Actualización exitosa.", "success")
-
-    return render_template("perfil.html", usuario=current_user)
-
-
-# ======================================================
-# MARKET
-# ======================================================
-@app.route("/market")
-def market():
-    return render_template("market.html")
-
-
-# ======================================================
-# PANEL ADMIN
-# ======================================================
-@app.route("/admin")
-@login_required
-def panel_admin():
-    if current_user.rol != "admin":
-        flash("Acceso denegado.", "error")
-        return redirect(url_for("market"))
-
-    usuarios = User.query.all()
-    return render_template("panel_admin.html", usuario=current_user, usuarios=usuarios)
-
-
-# ======================================================
-# CREAR USUARIO (CORREGIDO)
-# ======================================================
-@app.route('/crear_usuario', methods=['POST'])
-@login_required
-def crear_usuario():
-    nombre = request.form.get("nombre")
-    correo = request.form.get("correo")
-    direccion = request.form.get("direccion") or ""
-    password = request.form.get("password")
-    rol = request.form.get("rol")
-
-    # Contraseña por defecto
-    if not password or password.strip() == "":
-        password = "12345"
+    if User.query.filter_by(correo=correo).first():
+        return jsonify({"success": False, "error": "El correo ya está registrado"}), 400
 
     nuevo = User(
         nombre=nombre,
         correo=correo,
-        direccion=direccion,
-        rol=rol
+        contrasena_hash=generate_password_hash(password),
+        rol="usuario"
     )
-
-    nuevo.set_password(password)
-
     db.session.add(nuevo)
     db.session.commit()
 
-    return redirect(url_for("panel_admin"))
-
+    return jsonify({"success": True, "message": "Cuenta creada correctamente"})
 
 
 # ======================================================
-# EDITAR USUARIO (CORREGIDO)
+# PERFIL — Actualizar datos del usuario
 # ======================================================
-@app.route("/editar_usuario/<int:id_usuario>", methods=["POST"])
-@login_required
-def editar_usuario(id_usuario):
-    if current_user.rol != "admin":
-        flash("No autorizado", "error")
-        return redirect(url_for("panel_admin"))
+@app.route("/api/perfil", methods=["PUT"])
+def api_perfil():
+    data = request.get_json()
+    user_id = data.get("id")
 
-    usuario = User.query.get_or_404(id_usuario)
+    usuario = User.query.get(user_id)
+    if not usuario:
+        return jsonify({"success": False, "error": "Usuario no encontrado"}), 404
 
-    # Evitar editar al admin principal
-    if usuario.correo == "admin@olisport.com":
-        flash("No puedes editar al admin principal.", "error")
-        return redirect(url_for("panel_admin"))
+    usuario.nombre = data.get("nombre", usuario.nombre)
+    usuario.correo = data.get("correo", usuario.correo)
+    usuario.direccion = data.get("direccion", usuario.direccion)
 
-    usuario.nombre = request.form.get("nombre")
-    usuario.correo = request.form.get("correo")
-    usuario.direccion = request.form.get("direccion")
-
-    # NUEVO → cambio de rol desde el modal
-    nuevo_rol = request.form.get("rol")
-    if nuevo_rol in ["usuario", "trabajador", "admin"]:
-        usuario.rol = nuevo_rol
-
-    # Cambio de contraseña
-    nueva_pass = request.form.get("password")
+    nueva_pass = data.get("password")
     if nueva_pass:
         usuario.contrasena_hash = generate_password_hash(nueva_pass)
 
     db.session.commit()
-    flash("Usuario actualizado correctamente.", "success")
-    return redirect(url_for("panel_admin"))
+    return jsonify({"success": True, "message": "Perfil actualizado correctamente"})
 
 
 # ======================================================
-# WHITELIST
+# USUARIOS — Listar todos (Admin)
 # ======================================================
-@app.route("/autorizar/<int:id_usuario>")
-@login_required
-def autorizar_usuario(id_usuario):
-    if current_user.rol != "admin":
-        flash("No autorizado", "error")
-        return redirect(url_for("market"))
+@app.route("/api/usuarios", methods=["GET"])
+def api_usuarios():
+    usuarios = User.query.all()
+    return jsonify({
+        "usuarios": [
+            {
+                "id": u.id,
+                "nombre": u.nombre,
+                "correo": u.correo,
+                "direccion": u.direccion or "",
+                "rol": u.rol,
+                "whitelist": u.whitelist,
+            }
+            for u in usuarios
+        ]
+    })
 
-    usuario = User.query.get_or_404(id_usuario)
 
-    if usuario.whitelist:
-        flash("El usuario ya está autorizado.", "warning")
-        return redirect(url_for("panel_admin"))
+# ======================================================
+# USUARIOS — Crear (Admin)
+# ======================================================
+@app.route("/api/usuarios", methods=["POST"])
+def api_crear_usuario():
+    data = request.get_json()
+    nombre = data.get("nombre")
+    correo = data.get("correo")
+    direccion = data.get("direccion", "")
+    password = data.get("password") or "12345"
+    rol = data.get("rol", "usuario")
 
-    nueva_aut = Whitelist(id_usuario=id_usuario)
-    usuario.whitelist = True
+    if User.query.filter_by(correo=correo).first():
+        return jsonify({"success": False, "error": "El correo ya está registrado"}), 400
 
-    db.session.add(nueva_aut)
+    nuevo = User(nombre=nombre, correo=correo, direccion=direccion, rol=rol)
+    nuevo.set_password(password)
+    db.session.add(nuevo)
     db.session.commit()
 
-    flash("Usuario autorizado.", "success")
-    return redirect(url_for("panel_admin"))
-
-
-@app.route("/desautorizar/<int:id_usuario>")
-@login_required
-def desautorizar_usuario(id_usuario):
-    if current_user.rol != "admin":
-        flash("No autorizado", "error")
-        return redirect(url_for("market"))
-
-    usuario = User.query.get_or_404(id_usuario)
-
-    if not usuario.whitelist:
-        flash("El usuario no estaba autorizado.", "warning")
-        return redirect(url_for("panel_admin"))
-
-    w = Whitelist.query.filter_by(id_usuario=id_usuario).first()
-    if w:
-        db.session.delete(w)
-
-    usuario.whitelist = False
-    db.session.commit()
-
-    flash("Autorización eliminada.", "success")
-    return redirect(url_for("panel_admin"))
+    return jsonify({"success": True, "message": "Usuario creado correctamente"})
 
 
 # ======================================================
-# CAMBIO DE ROL
+# USUARIOS — Editar (Admin)
 # ======================================================
-@app.route("/cambiar_rol/<int:id_usuario>", methods=["POST"])
-@login_required
-def cambiar_rol(id_usuario):
-    if current_user.rol != "admin":
-        flash("No autorizado", "error")
-        return redirect(url_for("panel_admin"))
-
+@app.route("/api/usuarios/<int:id_usuario>", methods=["PUT"])
+def api_editar_usuario(id_usuario):
     usuario = User.query.get_or_404(id_usuario)
 
     if usuario.correo == "admin@olisport.com":
-        flash("No puedes cambiar el rol del admin principal.", "error")
-        return redirect(url_for("panel_admin"))
+        return jsonify({"success": False, "error": "No puedes editar al admin principal"}), 403
 
-    nuevo_rol = request.form.get("rol")
+    data = request.get_json()
+    usuario.nombre = data.get("nombre", usuario.nombre)
+    usuario.correo = data.get("correo", usuario.correo)
+    usuario.direccion = data.get("direccion", usuario.direccion)
 
-    if nuevo_rol not in ["admin", "trabajador", "usuario"]:
-        flash("Rol inválido", "error")
-        return redirect(url_for("panel_admin"))
+    nuevo_rol = data.get("rol")
+    if nuevo_rol in ["usuario", "trabajador", "admin"]:
+        usuario.rol = nuevo_rol
 
-    usuario.rol = nuevo_rol
+    nueva_pass = data.get("password")
+    if nueva_pass:
+        usuario.contrasena_hash = generate_password_hash(nueva_pass)
+
     db.session.commit()
-
-    flash("Rol actualizado.", "success")
-    return redirect(url_for("panel_admin"))
+    return jsonify({"success": True, "message": "Usuario actualizado correctamente"})
 
 
 # ======================================================
-# ELIMINAR USUARIO
+# USUARIOS — Eliminar (Admin)
 # ======================================================
-@app.route("/eliminar_usuario/<int:id_usuario>", methods=["POST"])
-@login_required
-def eliminar_usuario(id_usuario):
-    if current_user.rol != "admin":
-        flash("No autorizado", "error")
-        return redirect(url_for("panel_admin"))
-
+@app.route("/api/usuarios/<int:id_usuario>", methods=["DELETE"])
+def api_eliminar_usuario(id_usuario):
     usuario = User.query.get_or_404(id_usuario)
 
     if usuario.correo == "admin@olisport.com":
-        flash("No puedes eliminar al administrador principal.", "error")
-        return redirect(url_for("panel_admin"))
+        return jsonify({"success": False, "error": "No puedes eliminar al admin principal"}), 403
 
     if usuario.whitelist:
         w = Whitelist.query.filter_by(id_usuario=id_usuario).first()
@@ -323,40 +185,53 @@ def eliminar_usuario(id_usuario):
 
     db.session.delete(usuario)
     db.session.commit()
-
-    flash("Usuario eliminado.", "success")
-    return redirect(url_for("panel_admin"))
+    return jsonify({"success": True, "message": "Usuario eliminado correctamente"})
 
 
 # ======================================================
-# PANEL TRABAJADOR
+# WHITELIST — Autorizar
 # ======================================================
-@app.route("/trabajador")
-@login_required
-def panel_trabajador():
-    if current_user.rol not in ["trabajador", "admin"]:
-        flash("No autorizado.", "error")
-        return redirect(url_for("market"))
+@app.route("/api/autorizar/<int:id_usuario>", methods=["POST"])
+def api_autorizar(id_usuario):
+    usuario = User.query.get_or_404(id_usuario)
+    if usuario.whitelist:
+        return jsonify({"success": False, "error": "Ya está autorizado"}), 400
 
-    if current_user.rol == "trabajador" and not current_user.whitelist:
-        flash("No estás autorizado.", "error")
-        return redirect(url_for("market"))
-
-    return render_template("trabajador.html", usuario=current_user)
-
-
-# ======================================================
-# LOGOUT
-# ======================================================
-@app.route("/logout")
-def logout():
-    logout_user()
-    flash("Sesión cerrada.", "success")
-    return redirect(url_for("index"))
+    nueva_aut = Whitelist(id_usuario=id_usuario)
+    usuario.whitelist = True
+    db.session.add(nueva_aut)
+    db.session.commit()
+    return jsonify({"success": True, "message": "Usuario autorizado correctamente"})
 
 
 # ======================================================
-# RUN + CREAR ADMIN
+# WHITELIST — Desautorizar
+# ======================================================
+@app.route("/api/desautorizar/<int:id_usuario>", methods=["POST"])
+def api_desautorizar(id_usuario):
+    usuario = User.query.get_or_404(id_usuario)
+    if not usuario.whitelist:
+        return jsonify({"success": False, "error": "No estaba autorizado"}), 400
+
+    w = Whitelist.query.filter_by(id_usuario=id_usuario).first()
+    if w:
+        db.session.delete(w)
+    usuario.whitelist = False
+    db.session.commit()
+    return jsonify({"success": True, "message": "Autorización eliminada"})
+
+
+# ======================================================
+# PRODUCTOS — Listar (preparado para Fase 1)
+# ======================================================
+@app.route("/api/productos", methods=["GET"])
+def api_productos():
+    # Retorna lista vacía por ahora; en Fase 1 se conecta con la tabla productos
+    return jsonify({"productos": []})
+
+
+# ======================================================
+# INIT DB + ADMIN
 # ======================================================
 if __name__ == '__main__':
     with app.app_context():
@@ -377,4 +252,4 @@ if __name__ == '__main__':
         else:
             print("✔ Admin ya existe")
 
-    app.run(debug=True)
+    app.run(debug=True, port=5000)
