@@ -28,28 +28,23 @@ export default function AboutPage() {
             calzado perfecto que se adapte a tus necesidades y estilo.
           </p>
 
-          <div style={{ marginTop: 32, display: 'flex', gap: 24, flexWrap: 'wrap' }}>
-            <div style={{
-              background: 'rgba(0,229,255,0.08)', border: '1px solid rgba(0,229,255,0.25)',
-              borderRadius: 12, padding: '24px 28px', flex: '1 1 200px'
-            }}>
-              <h3 style={{ color: 'rgb(0,229,255)', marginBottom: 8, fontSize: '2rem' }}>+5</h3>
-              <p style={{ margin: 0 }}>Años de experiencia en el mercado</p>
-            </div>
-            <div style={{
-              background: 'rgba(0,229,255,0.08)', border: '1px solid rgba(0,229,255,0.25)',
-              borderRadius: 12, padding: '24px 28px', flex: '1 1 200px'
-            }}>
-              <h3 style={{ color: 'rgb(0,229,255)', marginBottom: 8, fontSize: '2rem' }}>+100</h3>
-              <p style={{ margin: 0 }}>Modelos disponibles</p>
-            </div>
-            <div style={{
-              background: 'rgba(0,229,255,0.08)', border: '1px solid rgba(0,229,255,0.25)',
-              borderRadius: 12, padding: '24px 28px', flex: '1 1 200px'
-            }}>
-              <h3 style={{ color: 'rgb(0,229,255)', marginBottom: 8, fontSize: '2rem' }}>3</h3>
-              <p style={{ margin: 0 }}>Categorías: Dama, Caballero y Niño</p>
-            </div>
+          <div style={{ marginTop: 32, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+            {[
+              { numero: '+5', label: 'Años en el mercado' },
+              { numero: '+100', label: 'Modelos disponibles' },
+              { numero: '3', label: 'Categorías' },
+            ].map((stat, i) => (
+              <div key={i} style={{
+                background: 'rgba(0,229,255,0.06)',
+                border: '1px solid rgba(0,229,255,0.2)',
+                borderRadius: 12, padding: '28px 20px', textAlign: 'center'
+              }}>
+                <div style={{ fontSize: '2rem', fontWeight: 700, color: 'rgb(0,229,255)', marginBottom: 6 }}>
+                  {stat.numero}
+                </div>
+                <div style={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.88rem' }}>{stat.label}</div>
+              </div>
+            ))}
           </div>
 
           <div style={{ marginTop: 40 }}>
