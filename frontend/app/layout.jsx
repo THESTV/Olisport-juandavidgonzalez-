@@ -20,11 +20,19 @@ export default function RootLayout({ children }) {
           crossOrigin="anonymous"
         />
       </head>
-      <body style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-        <Providers>
-          {children}
-        </Providers>
-      </body>
+<body
+  style={{
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: '100vh',
+  }}
+>
+  <div className="user-site-bg">
+    <Providers>
+      {children}
+    </Providers>
+  </div>
+</body>
     </html>
   )
 }

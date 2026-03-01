@@ -93,17 +93,15 @@ export default function HomePage() {
         </section>
 
         {/* ===== CONOCE MÁS ===== */}
-        <section className="section hireme">
-          <div className="container">
-            <div className="section-header">
-              <h1 className="title" style={{ fontSize: 30 }}>
-                CONOCE MÁS SOBRE NOSOTROS
-              </h1>
-            </div>
-            <Link href="/about" className="btn-acesso">
-              <span style={{ color: 'black' }}>Quiénes somos</span>
-            </Link>
-          </div>
+        <section className="about-section-home">
+          <h2>CONOCE MÁS SOBRE NOSOTROS</h2>
+          <div className="section-divider" style={{ margin: '0 auto 32px' }}></div>
+          <Link href="/about">
+            <button className="btn">
+              <i className="fas fa-users" style={{ marginRight: 8 }} />
+              Quiénes somos
+            </button>
+          </Link>
         </section>
       </main>
 
