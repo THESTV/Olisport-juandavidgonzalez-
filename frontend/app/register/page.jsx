@@ -35,6 +35,7 @@ export default function RegisterPage() {
           password: form.password,
         }),
       })
+
       const data = await res.json()
 
       if (res.ok && data.success) {
@@ -54,24 +55,29 @@ export default function RegisterPage() {
     <>
       <Navbar currentPage="register" />
 
-      <main style={{ flex: 1 }}>
+      <main>
         <section className="auth-section">
-          <div className="register-box">
+          <div className="login-box">
 
-            <div className="register-logo">
+            <div className="login-logo">
               <img src="/logo-olisport.PNG" alt="OliSport Logo" />
             </div>
 
-            <h2 className="register-title">Crear Cuenta</h2>
-            <p className="register-subtitle">Únete a OliSport y comienza ahora</p>
+            <h2 className="login-title">Crear Cuenta</h2>
+            <p style={{ marginBottom: '20px', color: 'rgba(255,255,255,0.6)', fontSize: '0.9rem' }}>
+              Únete a OliSport y comienza ahora
+            </p>
 
             {mensaje.texto && (
               <div className="flash-container">
-                <div className={`flash-message ${mensaje.tipo}`}>{mensaje.texto}</div>
+                <div className={`flash-message ${mensaje.tipo}`}>
+                  {mensaje.texto}
+                </div>
               </div>
             )}
 
             <form onSubmit={handleSubmit} className="form-container">
+
               <div className="form-group">
                 <label>Nombre completo</label>
                 <input
@@ -83,6 +89,7 @@ export default function RegisterPage() {
                   required
                 />
               </div>
+
               <div className="form-group">
                 <label>Correo electrónico</label>
                 <input
@@ -94,6 +101,7 @@ export default function RegisterPage() {
                   required
                 />
               </div>
+
               <div className="form-group">
                 <label>Contraseña</label>
                 <input
@@ -105,6 +113,7 @@ export default function RegisterPage() {
                   required
                 />
               </div>
+
               <div className="form-group">
                 <label>Confirmar contraseña</label>
                 <input
@@ -117,15 +126,15 @@ export default function RegisterPage() {
                 />
               </div>
 
-              <button type="submit" className="register-btn" disabled={loading}>
+              <button type="submit" className="login-btn" disabled={loading}>
                 {loading ? 'Creando cuenta...' : 'Crear cuenta'}
               </button>
             </form>
 
             <p className="form-footer">
-              ¿Ya tienes cuenta?{' '}
-              <Link href="/login">Inicia sesión</Link>
+              ¿Ya tienes cuenta? <Link href="/login">Inicia sesión</Link>
             </p>
+
           </div>
         </section>
       </main>
