@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from flask_login import LoginManager, login_user, logout_user, current_user
+from flask_login import LoginManager
 from werkzeug.security import generate_password_hash
 from models import db, User, Whitelist
 from config import Config
@@ -9,7 +9,6 @@ app = Flask(__name__)
 app.config.from_object(Config)
 db.init_app(app)
 
-# Permite peticiones desde Next.js (localhost:3000)
 CORS(app, origins=["http://localhost:3000"], supports_credentials=True)
 
 login_manager = LoginManager()
@@ -21,7 +20,7 @@ def load_user(user_id):
 
 
 # ======================================================
-# AUTH — LOGIN (llamado por NextAuth)
+# AUTH — LOGIN
 # ======================================================
 @app.route("/api/login", methods=["POST"])
 def api_login():
@@ -34,6 +33,45 @@ def api_login():
         return jsonify({"success": False, "error": "El correo no está registrado"}), 401
     if not usuario.check_password(password):
         return jsonify({"success": False, "error": "Contraseña incorrecta"}), 401
+
+    return jsonify({
+        "success": True,
+        "user": {
+            "id": usuario.id,
+            "nombre": usuario.nombre,
+            "correo": usuario.correo,
+            "rol": usuario.rol,
+            "whitelist": usuario.whitelist,
+            "direccion": usuario.direccion or "",
+        }
+    })
+
+
+# ======================================================
+# AUTH — LOGIN CON GOOGLE
+# ======================================================
+@app.route("/api/google-login", methods=["POST"])
+def api_google_login():
+    data = request.get_json()
+    correo = data.get("correo", "").strip().lower()
+    nombre = data.get("nombre", "").strip()
+    provider_id = data.get("provider_id")
+
+    if not correo:
+        return jsonify({"success": False, "error": "Correo requerido"}), 400
+
+    usuario = User.query.filter_by(correo=correo).first()
+
+    if not usuario:
+        usuario = User(
+            nombre=nombre,
+            correo=correo,
+            contrasena_hash=generate_password_hash(provider_id or "google_user"),
+            rol="usuario",
+            whitelist=False,
+        )
+        db.session.add(usuario)
+        db.session.commit()
 
     return jsonify({
         "success": True,
@@ -74,7 +112,7 @@ def api_register():
 
 
 # ======================================================
-# PERFIL — Actualizar datos del usuario
+# PERFIL
 # ======================================================
 @app.route("/api/perfil", methods=["PUT"])
 def api_perfil():
@@ -98,7 +136,7 @@ def api_perfil():
 
 
 # ======================================================
-# USUARIOS — Listar todos (Admin)
+# USUARIOS — Listar (Admin)
 # ======================================================
 @app.route("/api/usuarios", methods=["GET"])
 def api_usuarios():
@@ -222,16 +260,15 @@ def api_desautorizar(id_usuario):
 
 
 # ======================================================
-# PRODUCTOS — Listar (preparado para Fase 1)
+# PRODUCTOS
 # ======================================================
 @app.route("/api/productos", methods=["GET"])
 def api_productos():
-    # Retorna lista vacía por ahora; en Fase 1 se conecta con la tabla productos
     return jsonify({"productos": []})
 
 
 # ======================================================
-# INIT DB + ADMIN
+# INIT
 # ======================================================
 if __name__ == '__main__':
     with app.app_context():

@@ -12,6 +12,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [loadingGoogle, setLoadingGoogle] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -31,7 +32,6 @@ export default function LoginPage() {
       return
     }
 
-    // Redirige según el rol — obtenemos la sesión actualizada
     const res = await fetch('/api/auth/session')
     const session = await res.json()
     const rol = session?.user?.rol
@@ -43,6 +43,11 @@ export default function LoginPage() {
     } else {
       router.push('/market')
     }
+  }
+
+  const handleGoogle = async () => {
+    setLoadingGoogle(true)
+    await signIn('google', { callbackUrl: '/market' })
   }
 
   return (
@@ -60,7 +65,6 @@ export default function LoginPage() {
             <h2 className="login-title">Bienvenido de nuevo</h2>
             <p className="login-subtitle">Inicia sesión para continuar</p>
 
-            {/* MENSAJES DE ERROR */}
             {error && (
               <div className="flash-container">
                 <div className="flash-message error">{error}</div>
@@ -92,12 +96,49 @@ export default function LoginPage() {
                 />
               </div>
 
-              <button
-                type="submit"
-                className="login-btn"
-                disabled={loading}
-              >
+              <button type="submit" className="login-btn" disabled={loading}>
                 {loading ? 'Ingresando...' : 'Ingresar'}
+              </button>
+
+              {/* DIVISOR */}
+              <div style={{
+                display: 'flex', alignItems: 'center', gap: 12, margin: '8px 0'
+              }}>
+                <hr style={{ flex: 1, borderColor: 'rgba(255,255,255,0.15)' }} />
+                <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.85rem' }}>o</span>
+                <hr style={{ flex: 1, borderColor: 'rgba(255,255,255,0.15)' }} />
+              </div>
+
+              {/* BOTÓN GOOGLE */}
+              <button
+                type="button"
+                onClick={handleGoogle}
+                disabled={loadingGoogle}
+                style={{
+                  width: '100%',
+                  padding: '12px 20px',
+                  background: 'white',
+                  color: '#333',
+                  border: '1px solid #ddd',
+                  borderRadius: 4,
+                  fontWeight: 700,
+                  fontSize: '0.95rem',
+                  fontFamily: 'Raleway, sans-serif',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 10,
+                  transition: 'box-shadow 0.2s',
+                  opacity: loadingGoogle ? 0.7 : 1,
+                }}
+              >
+                <img
+                  src="https://www.google.com/favicon.ico"
+                  alt="Google"
+                  style={{ width: 18, height: 18 }}
+                />
+                {loadingGoogle ? 'Redirigiendo...' : 'Continuar con Google'}
               </button>
             </form>
 
