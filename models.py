@@ -50,3 +50,36 @@ class Whitelist(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     id_usuario = db.Column(db.Integer, db.ForeignKey("usuarios.id"))
+
+    # ============================================================
+#  MODELO ROL
+# ============================================================
+class Rol(db.Model):
+    __tablename__ = "roles"
+
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(50), unique=True, nullable=False)
+    permisos_json = db.Column(db.JSON, default={})
+
+    usuarios = db.relationship("UsuarioRol", back_populates="rol", cascade="all, delete")
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "nombre": self.nombre,
+            "permisos": self.permisos_json or {}
+        }
+
+
+# ============================================================
+#  MODELO USUARIO_ROLES
+# ============================================================
+class UsuarioRol(db.Model):
+    __tablename__ = "usuario_roles"
+
+    id = db.Column(db.Integer, primary_key=True)
+    usuario_id = db.Column(db.Integer, db.ForeignKey("usuarios.id"), nullable=False)
+    rol_id = db.Column(db.Integer, db.ForeignKey("roles.id"), nullable=False)
+
+    usuario = db.relationship("User", backref="usuario_roles")
+    rol = db.relationship("Rol", back_populates="usuarios")

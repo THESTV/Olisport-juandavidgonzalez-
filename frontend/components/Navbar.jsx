@@ -65,7 +65,8 @@ export default function Navbar({ currentPage = '' }) {
               <Link href="/contact" className={currentPage === 'contact' ? 'current' : ''}>Contacto</Link>
             </li>
 
-            {session && (
+            {/* Market — solo si está autenticado Y (admin O whitelist) */}
+            {session && (rol === 'admin' || whitelist) && (
               <li>
                 <Link href="/market" className={currentPage === 'market' ? 'current' : ''}>Market</Link>
               </li>
@@ -77,8 +78,8 @@ export default function Navbar({ currentPage = '' }) {
               </li>
             )}
 
-            {/* Panel Trabajador */}
-            {session && (rol === 'trabajador' || rol === 'admin') && (
+            {/* Panel Trabajador — solo trabajador autorizado o admin */}
+            {session && ((rol === 'trabajador' && whitelist) || rol === 'admin') && (
               <li>
                 <Link
                   href="/trabajador"
@@ -90,7 +91,7 @@ export default function Navbar({ currentPage = '' }) {
               </li>
             )}
 
-            {/* Panel Admin */}
+            {/* Panel Admin — solo admin */}
             {session && rol === 'admin' && (
               <li>
                 <Link
@@ -105,12 +106,7 @@ export default function Navbar({ currentPage = '' }) {
           </ul>
 
           {/* HAMBURGUESA */}
-          <div
-            className="hamburger"
-            onClick={() => setMenuOpen(!menuOpen)}
-          >
-            ☰
-          </div>
+          <div className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>☰</div>
         </div>
 
         {/* MENÚ RESPONSIVE */}
@@ -119,7 +115,7 @@ export default function Navbar({ currentPage = '' }) {
             <Link href="/about" onClick={() => setMenuOpen(false)}>Quiénes somos</Link>
             <Link href="/servicio" onClick={() => setMenuOpen(false)}>Servicios</Link>
             <Link href="/contact" onClick={() => setMenuOpen(false)}>Contáctanos</Link>
-            {session && (
+            {session && (rol === 'admin' || whitelist) && (
               <Link href="/market" onClick={() => setMenuOpen(false)}>Market</Link>
             )}
           </div>

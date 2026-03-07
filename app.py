@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_login import LoginManager
 from werkzeug.security import generate_password_hash
-from models import db, User, Whitelist
+from models import db, User, Whitelist, Rol, UsuarioRol
 from config import Config
 from flask_cors import CORS
 
@@ -73,6 +73,13 @@ def api_google_login():
         db.session.add(usuario)
         db.session.commit()
 
+        # Asignar rol RBAC por defecto
+        rol = Rol.query.filter_by(nombre="usuario").first()
+        if rol:
+            asignacion = UsuarioRol(usuario_id=usuario.id, rol_id=rol.id)
+            db.session.add(asignacion)
+            db.session.commit()
+
     return jsonify({
         "success": True,
         "user": {
@@ -107,6 +114,13 @@ def api_register():
     )
     db.session.add(nuevo)
     db.session.commit()
+
+    # Asignar rol RBAC por defecto
+    rol = Rol.query.filter_by(nombre="usuario").first()
+    if rol:
+        asignacion = UsuarioRol(usuario_id=nuevo.id, rol_id=rol.id)
+        db.session.add(asignacion)
+        db.session.commit()
 
     return jsonify({"success": True, "message": "Cuenta creada correctamente"})
 
@@ -150,6 +164,7 @@ def api_usuarios():
                 "direccion": u.direccion or "",
                 "rol": u.rol,
                 "whitelist": u.whitelist,
+                "roles_rbac": [ur.rol.to_dict() for ur in u.usuario_roles],
             }
             for u in usuarios
         ]
@@ -166,15 +181,22 @@ def api_crear_usuario():
     correo = data.get("correo")
     direccion = data.get("direccion", "")
     password = data.get("password") or "12345"
-    rol = data.get("rol", "usuario")
+    rol_nombre = data.get("rol", "usuario")
 
     if User.query.filter_by(correo=correo).first():
         return jsonify({"success": False, "error": "El correo ya está registrado"}), 400
 
-    nuevo = User(nombre=nombre, correo=correo, direccion=direccion, rol=rol)
+    nuevo = User(nombre=nombre, correo=correo, direccion=direccion, rol=rol_nombre)
     nuevo.set_password(password)
     db.session.add(nuevo)
     db.session.commit()
+
+    # Asignar rol RBAC
+    rol = Rol.query.filter_by(nombre=rol_nombre).first()
+    if rol:
+        asignacion = UsuarioRol(usuario_id=nuevo.id, rol_id=rol.id)
+        db.session.add(asignacion)
+        db.session.commit()
 
     return jsonify({"success": True, "message": "Usuario creado correctamente"})
 
@@ -197,6 +219,11 @@ def api_editar_usuario(id_usuario):
     nuevo_rol = data.get("rol")
     if nuevo_rol in ["usuario", "trabajador", "admin"]:
         usuario.rol = nuevo_rol
+        # Sincronizar RBAC
+        UsuarioRol.query.filter_by(usuario_id=id_usuario).delete()
+        rol = Rol.query.filter_by(nombre=nuevo_rol).first()
+        if rol:
+            db.session.add(UsuarioRol(usuario_id=id_usuario, rol_id=rol.id))
 
     nueva_pass = data.get("password")
     if nueva_pass:
@@ -221,6 +248,7 @@ def api_eliminar_usuario(id_usuario):
         if w:
             db.session.delete(w)
 
+    UsuarioRol.query.filter_by(usuario_id=id_usuario).delete()
     db.session.delete(usuario)
     db.session.commit()
     return jsonify({"success": True, "message": "Usuario eliminado correctamente"})
@@ -260,6 +288,105 @@ def api_desautorizar(id_usuario):
 
 
 # ======================================================
+# ROLES — Listar
+# ======================================================
+@app.route("/api/roles", methods=["GET"])
+def api_roles():
+    roles = Rol.query.all()
+    return jsonify({"roles": [r.to_dict() for r in roles]})
+
+
+# ======================================================
+# ROLES — Crear
+# ======================================================
+@app.route("/api/roles", methods=["POST"])
+def api_crear_rol():
+    data = request.get_json()
+    nombre = data.get("nombre", "").strip().lower()
+    permisos = data.get("permisos", {})
+
+    if not nombre:
+        return jsonify({"success": False, "error": "Nombre requerido"}), 400
+    if Rol.query.filter_by(nombre=nombre).first():
+        return jsonify({"success": False, "error": "El rol ya existe"}), 400
+
+    rol = Rol(nombre=nombre, permisos_json=permisos)
+    db.session.add(rol)
+    db.session.commit()
+    return jsonify({"success": True, "rol": rol.to_dict()})
+
+
+# ======================================================
+# ROLES — Editar
+# ======================================================
+@app.route("/api/roles/<int:rol_id>", methods=["PUT"])
+def api_editar_rol(rol_id):
+    rol = Rol.query.get_or_404(rol_id)
+    data = request.get_json()
+    rol.nombre = data.get("nombre", rol.nombre)
+    rol.permisos_json = data.get("permisos", rol.permisos_json)
+    db.session.commit()
+    return jsonify({"success": True, "rol": rol.to_dict()})
+
+
+# ======================================================
+# ROLES — Eliminar
+# ======================================================
+@app.route("/api/roles/<int:rol_id>", methods=["DELETE"])
+def api_eliminar_rol(rol_id):
+    rol = Rol.query.get_or_404(rol_id)
+    if rol.nombre in ["admin", "trabajador", "usuario"]:
+        return jsonify({"success": False, "error": "No puedes eliminar roles base"}), 403
+    db.session.delete(rol)
+    db.session.commit()
+    return jsonify({"success": True})
+
+
+# ======================================================
+# USUARIO_ROLES — Asignar rol
+# ======================================================
+@app.route("/api/usuarios/<int:id_usuario>/roles", methods=["POST"])
+def api_asignar_rol(id_usuario):
+    usuario = User.query.get_or_404(id_usuario)
+    data = request.get_json()
+    rol_id = data.get("rol_id")
+
+    rol = Rol.query.get_or_404(rol_id)
+    existe = UsuarioRol.query.filter_by(usuario_id=id_usuario, rol_id=rol_id).first()
+    if existe:
+        return jsonify({"success": False, "error": "El usuario ya tiene ese rol"}), 400
+
+    asignacion = UsuarioRol(usuario_id=id_usuario, rol_id=rol_id)
+    usuario.rol = rol.nombre
+    db.session.add(asignacion)
+    db.session.commit()
+    return jsonify({"success": True, "message": f"Rol '{rol.nombre}' asignado correctamente"})
+
+
+# ======================================================
+# USUARIO_ROLES — Quitar rol
+# ======================================================
+@app.route("/api/usuarios/<int:id_usuario>/roles/<int:rol_id>", methods=["DELETE"])
+def api_quitar_rol(id_usuario, rol_id):
+    asignacion = UsuarioRol.query.filter_by(usuario_id=id_usuario, rol_id=rol_id).first()
+    if not asignacion:
+        return jsonify({"success": False, "error": "El usuario no tiene ese rol"}), 404
+    db.session.delete(asignacion)
+    db.session.commit()
+    return jsonify({"success": True, "message": "Rol quitado correctamente"})
+
+
+# ======================================================
+# USUARIO_ROLES — Ver roles de usuario
+# ======================================================
+@app.route("/api/usuarios/<int:id_usuario>/roles", methods=["GET"])
+def api_roles_usuario(id_usuario):
+    usuario = User.query.get_or_404(id_usuario)
+    roles = [ur.rol.to_dict() for ur in usuario.usuario_roles]
+    return jsonify({"roles": roles})
+
+
+# ======================================================
 # PRODUCTOS
 # ======================================================
 @app.route("/api/productos", methods=["GET"])
@@ -288,5 +415,14 @@ if __name__ == '__main__':
             print("✔ Admin creado correctamente")
         else:
             print("✔ Admin ya existe")
+
+        # Asignar rol RBAC al admin si no tiene
+        rol_admin = Rol.query.filter_by(nombre="admin").first()
+        if rol_admin and admin:
+            existe = UsuarioRol.query.filter_by(usuario_id=admin.id, rol_id=rol_admin.id).first()
+            if not existe:
+                db.session.add(UsuarioRol(usuario_id=admin.id, rol_id=rol_admin.id))
+                db.session.commit()
+                print("✔ Rol RBAC admin asignado")
 
     app.run(debug=True, port=5000)
